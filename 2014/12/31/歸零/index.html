@@ -3,40 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>什麼是Node.js? | 世紀末程式猿</title>
+  <title>歸零 | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
-
-
-Node.js
-
-Server - side javascript
-單一執行緒事件迴圈 (single-threaded event loop)
-使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O)">
+  <meta name="description" content="倒空瓶子裏的水，才能裝滿美酒。
+最近常有一種很焦慮的感覺。我想，或許是因為心中想做的事情太多，卻又都沒做完。資訊爆炸，新的東西出來的快。選擇變多，汰換率又變高。每做一個決策的風險提高，看不清楚未來的道路。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="什麼是Node.js?">
-<meta property="og:url" content="http://yoursite.com/2014/12/31/什麼是Node-js/">
+<meta property="og:title" content="歸零">
+<meta property="og:url" content="http://yoursite.com/2014/12/31/歸零/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
-
-
-Node.js
-
-Server - side javascript
-單一執行緒事件迴圈 (single-threaded event loop)
-使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O)">
-<meta property="og:image" content="http://joyeur.files.wordpress.com/2011/07/node.png">
-<meta property="og:image" content="https://lh5.googleusercontent.com/UcmoWJZBug74fFO4vn4DFvYtKn3zXJa29n9Udpxp4-R6IOfZdbxXFXjXgNnEA8oKmGTZtpkhhNRxL6m8ZzlWBFFKd6XnUaqzn9vYvURyDwljHJYrxw">
+<meta property="og:description" content="倒空瓶子裏的水，才能裝滿美酒。
+最近常有一種很焦慮的感覺。我想，或許是因為心中想做的事情太多，卻又都沒做完。資訊爆炸，新的東西出來的快。選擇變多，汰換率又變高。每做一個決策的風險提高，看不清楚未來的道路。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="什麼是Node.js?">
-<meta name="twitter:description" content="Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
-
-
-Node.js
-
-Server - side javascript
-單一執行緒事件迴圈 (single-threaded event loop)
-使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O)">
+<meta name="twitter:title" content="歸零">
+<meta name="twitter:description" content="倒空瓶子裏的水，才能裝滿美酒。
+最近常有一種很焦慮的感覺。我想，或許是因為心中想做的事情太多，卻又都沒做完。資訊爆炸，新的東西出來的快。選擇變多，汰換率又變高。每做一個決策的風險提高，看不清楚未來的道路。">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -88,14 +68,14 @@ Server - side javascript
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-什麼是Node-js" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-歸零" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/12/31/什麼是Node-js/" class="article-date">
-  <time datetime="2014-12-31T02:58:06.000Z" itemprop="datePublished">Dec 31 2014</time>
+    <a href="/2014/12/31/歸零/" class="article-date">
+  <time datetime="2014-12-31T02:00:24.000Z" itemprop="datePublished">Dec 31 2014</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
+    <a class="article-category-link" href="/categories/心情/">心情</a>
   </div>
 
   </div>
@@ -106,7 +86,7 @@ Server - side javascript
         
   
     <h1 class="article-title" itemprop="name">
-      什麼是Node.js?
+      歸零
     </h1>
   
 
@@ -115,52 +95,18 @@ Server - side javascript
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="_"> </h4>
-<pre><code>Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
-</code></pre><p><br></p>
-<p><img src="http://joyeur.files.wordpress.com/2011/07/node.png" alt=""></p>
-<h2 id="Node-js">Node.js</h2>
-<ul>
-<li>Server - side javascript</li>
-<li>單一執行緒事件迴圈 (single-threaded event loop)</li>
-<li>使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O) 模型。這讓他輕量並且有效率。</li>
-<li>適合在分散式的裝置上，做資料密集、即時的處理程序。<br><br></li>
-</ul>
-<h2 id="主要元件:">主要元件:</h2>
-<h4 id="V8">V8</h4>
-<pre><code>美國Google開發的開源JavaScript引擎，用於Google Chrome中。
-執行之前將JavaScript編譯成了機器碼(machine code)，而非傳統方式直譯(interpreting)位元組碼(byte code)，以此提升效能。
-使用了如內聯緩存（<span class="keyword">inline</span> caching）方法來提高效能。
-</code></pre><p></p><p>Wiki - <a href="http://en.wikipedia.org/wiki/V8_(JavaScript_engine)" target="_blank" rel="external">http://en.wikipedia.org/wiki/V8_(JavaScript_engine)</a></p><br><br><p></p>
-<h4 id="APIs">APIs</h4>
-<p><a href="http://nodejs.org/api/" target="_blank" rel="external">http://nodejs.org/api/</a><br><br></p>
-<h4 id="libuv">libuv</h4>
-<p>Github - <a href="https://github.com/libuv/libuv" target="_blank" rel="external">https://github.com/libuv/libuv</a><br><br></p>
-<h2 id="支援多個平台的非同步I/O_Libary，包含：">支援多個平台的非同步I/O Libary，包含：</h2>
-<ul>
-<li>Signal handling</li>
-<li>Thread pool</li>
-<li>ANSI escape code controlled TTY</li>
-<li>File system events</li>
-<li>Asynchronous file and file system operations</li>
-<li>Asynchronous DNS resolution</li>
-<li>Asynchronous TCP and UDP sockets</li>
-<li>event loop backed by epoll, kqueue, IOCP, event ports</li>
-<li>High resolution clock</li>
-<li>Threading and synchronization primitives</li>
-<li>IPC with socket sharing, using Unix domain sockets or named pipes (Windows)</li>
-<li>Child processes</li>
-</ul>
-<p><img src="https://lh5.googleusercontent.com/UcmoWJZBug74fFO4vn4DFvYtKn3zXJa29n9Udpxp4-R6IOfZdbxXFXjXgNnEA8oKmGTZtpkhhNRxL6m8ZzlWBFFKd6XnUaqzn9vYvURyDwljHJYrxw" alt="">        </p>
+<pre><code>倒空瓶子裏的水，才能裝滿美酒。
+</code></pre><p>最近常有一種很焦慮的感覺。<br><br><br>我想，或許是因為心中想做的事情太多，卻又都沒做完。<br>資訊爆炸，新的東西出來的快。選擇變多，汰換率又變高。<br>每做一個決策的風險提高，看不清楚未來的道路。<br><br></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/12/31/什麼是Node-js/" data-id="4r1okk1224ttxxwc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/12/31/歸零/" data-id="n9f82dvuddveu8u8" class="article-share-link">Share</a>
       
-        <a href="http://yoursite.com/2014/12/31/什麼是Node-js/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://yoursite.com/2014/12/31/歸零/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情/">心情</a></li></ul>
 
     </footer>
   </div>
@@ -168,20 +114,15 @@ Server - side javascript
     
 <nav id="article-nav">
   
-    <a href="/2014/12/31/下載-x-安裝-x-Node-js/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2014/12/31/什麼是Node-js/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          下載 x 安裝 x Node.js
+          什麼是Node.js?
         
       </div>
     </a>
   
-  
-    <a href="/2014/12/31/歸零/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">歸零</div>
-    </a>
   
 </nav>
 
@@ -272,7 +213,7 @@ Server - side javascript
 <script>
   var disqus_shortname = 'disqus_eaURFIFayA';
   
-  var disqus_url = 'http://yoursite.com/2014/12/31/什麼是Node-js/';
+  var disqus_url = 'http://yoursite.com/2014/12/31/歸零/';
   
   (function(){
     var dsq = document.createElement('script');
