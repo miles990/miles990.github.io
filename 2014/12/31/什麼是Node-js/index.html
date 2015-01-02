@@ -26,7 +26,9 @@ Server - side javascript
 單一執行緒事件迴圈 (single-threaded event loop)
 使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O)">
 <meta property="og:image" content="http://joyeur.files.wordpress.com/2011/07/node.png">
-<meta property="og:image" content="https://lh5.googleusercontent.com/UcmoWJZBug74fFO4vn4DFvYtKn3zXJa29n9Udpxp4-R6IOfZdbxXFXjXgNnEA8oKmGTZtpkhhNRxL6m8ZzlWBFFKd6XnUaqzn9vYvURyDwljHJYrxw">
+<meta property="og:image" content="http://image.slidesharecdn.com/nodejs-140507132306-phpapp02/95/nodejs-code-tracing-2-638.jpg?cb=1399487042">
+<meta property="og:image" content="https://lh3.googleusercontent.com/W2WSoXyvU5uqvaK39o5ge2Crs7SRMx6zVYFvDG19SdoTUxJMkZMx305bVXibhy4eNhaTObS3KFw=w1267-h505">
+<meta property="og:image" content="https://lh4.googleusercontent.com/zjEoRAFz9QNUzdKzrJONm-hWAC4EBulCM26hEpwlNB8WJRaVgYsRQBmTojK6EqXUomPPDdoCloE=w1267-h505">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="什麼是Node.js?">
 <meta name="twitter:description" content="Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
@@ -150,12 +152,15 @@ Server - side javascript
 <li>IPC with socket sharing, using Unix domain sockets or named pipes (Windows)</li>
 <li>Child processes</li>
 </ul>
-<p><img src="https://lh5.googleusercontent.com/UcmoWJZBug74fFO4vn4DFvYtKn3zXJa29n9Udpxp4-R6IOfZdbxXFXjXgNnEA8oKmGTZtpkhhNRxL6m8ZzlWBFFKd6XnUaqzn9vYvURyDwljHJYrxw" alt="">        </p>
+<p><img src="http://image.slidesharecdn.com/nodejs-140507132306-phpapp02/95/nodejs-code-tracing-2-638.jpg?cb=1399487042" alt=""><br><br></p>
+<h2 id="安裝_Node-js">安裝 Node.js</h2>
+<pre><code>到Node.js的官網 http:<span class="comment">//nodejs.org/download/ 選取要安裝的平台，下載安裝即可。</span>
+</code></pre><p> <img src="https://lh3.googleusercontent.com/W2WSoXyvU5uqvaK39o5ge2Crs7SRMx6zVYFvDG19SdoTUxJMkZMx305bVXibhy4eNhaTObS3KFw=w1267-h505" alt=""><br><strong>官方下載連結</strong> - <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a><br><br><br>安裝完畢後，開啟終端機模式。<br>輸入 node -v 指令。<br>會在畫面顯示目前安裝的 Node.js 版本號，<br><img src="https://lh4.googleusercontent.com/zjEoRAFz9QNUzdKzrJONm-hWAC4EBulCM26hEpwlNB8WJRaVgYsRQBmTojK6EqXUomPPDdoCloE=w1267-h505" alt=""><br>看到此畫面表示已安裝成功。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是Node-js/" data-id="n2k84l8be67uidvb" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2014/12/31/什麼是Node-js/" data-id="qla1vzch9m0eruf6" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2014/12/31/什麼是Node-js/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -168,11 +173,11 @@ Server - side javascript
     
 <nav id="article-nav">
   
-    <a href="/2014/12/31/下載-x-安裝-x-Node-js/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2014/12/31/什麼是npm?/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          下載 x 安裝 x Node.js
+          什麼是npm?
         
       </div>
     </a>
@@ -211,7 +216,7 @@ Server - side javascript
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -232,7 +237,7 @@ Server - side javascript
       <ul>
         
           <li>
-            <a href="/2014/12/31/下載-x-安裝-x-Node-js/">下載 x 安裝 x Node.js</a>
+            <a href="/2014/12/31/什麼是npm?/">什麼是npm?</a>
           </li>
         
           <li>
@@ -255,7 +260,7 @@ Server - side javascript
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2014 Alex Lee<br>
+      &copy; 2015 Alex Lee<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

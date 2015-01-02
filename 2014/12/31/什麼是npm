@@ -3,20 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>歸零 | 世紀末程式猿</title>
+  <title>什麼是npm? | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="倒空瓶子裏的水，才能裝滿美酒。
-最近時常有一種很焦慮的感覺，是一種對未來的不確定性的感覺。我想，或許是因為心中想做的事情太多，卻又都沒有做。以前的人說資訊就是力量。目前處於一個資訊爆炸，又人人可以隨意取得資訊的世代。隨著網際網路的出現，利用資訊不對等造成大量獲利的情況，將因網路的特性，逐漸被消除。而平庸的跟頂尖的人，隨著辨別資訊消化資訊量的速度，差距逐漸被拉大。處在這個世代的人們，該以何種策略">
+  <meta name="description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="歸零">
-<meta property="og:url" content="http://miles990.github.io/2014/12/31/歸零/">
+<meta property="og:title" content="什麼是npm?">
+<meta property="og:url" content="http://miles990.github.io/2014/12/31/什麼是npm?/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="倒空瓶子裏的水，才能裝滿美酒。
-最近時常有一種很焦慮的感覺，是一種對未來的不確定性的感覺。我想，或許是因為心中想做的事情太多，卻又都沒有做。以前的人說資訊就是力量。目前處於一個資訊爆炸，又人人可以隨意取得資訊的世代。隨著網際網路的出現，利用資訊不對等造成大量獲利的情況，將因網路的特性，逐漸被消除。而平庸的跟頂尖的人，隨著辨別資訊消化資訊量的速度，差距逐漸被拉大。處在這個世代的人們，該以何種策略">
+<meta property="og:description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="歸零">
-<meta name="twitter:description" content="倒空瓶子裏的水，才能裝滿美酒。
-最近時常有一種很焦慮的感覺，是一種對未來的不確定性的感覺。我想，或許是因為心中想做的事情太多，卻又都沒有做。以前的人說資訊就是力量。目前處於一個資訊爆炸，又人人可以隨意取得資訊的世代。隨著網際網路的出現，利用資訊不對等造成大量獲利的情況，將因網路的特性，逐漸被消除。而平庸的跟頂尖的人，隨著辨別資訊消化資訊量的速度，差距逐漸被拉大。處在這個世代的人們，該以何種策略">
+<meta name="twitter:title" content="什麼是npm?">
+<meta name="twitter:description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -68,14 +65,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-歸零" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-什麼是npm?" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/12/31/歸零/" class="article-date">
-  <time datetime="2014-12-31T02:00:24.000Z" itemprop="datePublished">Dec 31 2014</time>
+    <a href="/2014/12/31/什麼是npm?/" class="article-date">
+  <time datetime="2014-12-31T06:13:36.000Z" itemprop="datePublished">Dec 31 2014</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/心情/">心情</a>
+    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
   </div>
 
   </div>
@@ -86,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      歸零
+      什麼是npm?
     </h1>
   
 
@@ -95,18 +92,17 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="_"> </h4>
-<pre><code>倒空瓶子裏的水，才能裝滿美酒。
-</code></pre><p>最近時常有一種很焦慮的感覺，是一種對未來的不確定性的感覺。<br><br><br>我想，或許是因為心中想做的事情太多，卻又都沒有做。<br><br><br>以前的人說資訊就是力量。<br><br><br>目前處於一個資訊爆炸，又人人可以隨意取得資訊的世代。<br>隨著網際網路的出現，利用資訊不對等造成大量獲利的情況，將因網路的特性，逐漸被消除。<br>而平庸的跟頂尖的人，隨著辨別資訊消化資訊量的速度，差距逐漸被拉大。<br>處在這個世代的人們，該以何種策略增加在這個世界上生存的機會？<br><br><br>也許是多角化的經營。將自己能涉略的範圍加大，盡可能地涵蓋住每個角落。<br>也許是更快速的改變。隨著環境持續的變動，更快速的調整目標及方法。<br>也許是更專注瞭解自己。了解自己跟別人不同之處，加大與別人的差異化。<br>也許不是增加自己要做的，而是該減少自己想做的。<br><br><br>沈澱一下，找出最必要的，將精力專注在少數的項目上。<br>把不要的東西通通倒光，或許去蕪存菁之後，才是一個人活著的價值。</p>
-
+<pre><code>npm - Node <span class="keyword">Package</span> Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。
+</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/歸零/" data-id="x83nnbrrci2qgo6l" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="gbueqpzbqyk3oqze" class="article-share-link">Share</a>
       
-        <a href="http://miles990.github.io/2014/12/31/歸零/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://miles990.github.io/2014/12/31/什麼是npm?/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情/">心情</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
 
     </footer>
   </div>
@@ -114,15 +110,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2014/12/31/什麼是Node-js/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          什麼是Node.js?
-        
-      </div>
-    </a>
   
+    <a href="/2014/12/31/什麼是Node-js/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">什麼是Node.js?</div>
+    </a>
   
 </nav>
 
@@ -213,7 +205,7 @@
 <script>
   var disqus_shortname = 'miles990';
   
-  var disqus_url = 'http://miles990.github.io/2014/12/31/歸零/';
+  var disqus_url = 'http://miles990.github.io/2014/12/31/什麼是npm?/';
   
   (function(){
     var dsq = document.createElement('script');
