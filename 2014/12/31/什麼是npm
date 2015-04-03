@@ -3,18 +3,39 @@
 <head>
   <meta charset="utf-8">
   
-  <title>什麼是npm? | 世紀末程式猿</title>
+  <title>npm &amp; package.json | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
+  <meta name="description" content="npm - Node Package Manager，Node 官方的組件管理方式，
+npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。也可以讓使用者安裝已經在 npm 官網註冊的 package。
+
+現在安裝 Node.js 會自帶 npm
+查看 npm 版本
+$npm -v
+更新 npm 到最新的版本
+$n">
 <meta property="og:type" content="article">
-<meta property="og:title" content="什麼是npm?">
+<meta property="og:title" content="npm & package.json">
 <meta property="og:url" content="http://miles990.github.io/2014/12/31/什麼是npm?/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
+<meta property="og:description" content="npm - Node Package Manager，Node 官方的組件管理方式，
+npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。也可以讓使用者安裝已經在 npm 官網註冊的 package。
+
+現在安裝 Node.js 會自帶 npm
+查看 npm 版本
+$npm -v
+更新 npm 到最新的版本
+$n">
 <meta property="og:image" content="http://dontkry.com/images/npm.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="什麼是npm?">
-<meta name="twitter:description" content="npm - Node Package Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。">
+<meta name="twitter:title" content="npm & package.json">
+<meta name="twitter:description" content="npm - Node Package Manager，Node 官方的組件管理方式，
+npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。也可以讓使用者安裝已經在 npm 官網註冊的 package。
+
+現在安裝 Node.js 會自帶 npm
+查看 npm 版本
+$npm -v
+更新 npm 到最新的版本
+$n">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -84,7 +105,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      什麼是npm?
+      npm &amp; package.json
     </h1>
   
 
@@ -93,13 +114,23 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="_"> </h4>
-<pre><code>npm - Node <span class="keyword">Package</span> Manager，讓 javascript 的開發者很容易的共享及重用程式碼，他可以很容易的更新你分享的程式碼。
-</code></pre><p><img src="http://dontkry.com/images/npm.png" alt=""></p>
+<pre><code>npm - Node <span class="keyword">Package</span> Manager，Node 官方的組件管理方式，
+</code></pre><p>npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。<br>也可以讓使用者安裝已經在 <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> 官網註冊的 package。</p>
+<p><img src="http://dontkry.com/images/npm.png" alt=""></p>
+<p>現在安裝 Node.js 會自帶 npm<br><br></p>
+<h4 id="查看_npm_版本">查看 npm 版本</h4>
+<p><code>$npm -v</code><br><br></p>
+<h4 id="更新_npm_到最新的版本">更新 npm 到最新的版本</h4>
+<p><code>$npm install -g npm@latest</code><br><br></p>
+<h4 id="使用_npm_安裝套件">使用 npm 安裝套件</h4>
+<p>例如安裝 express 包(一個 web framework)<br><code>$npm install express</code><br><br></p>
+<p>可以在這找到有哪些包可以安裝<br><a href="https://www.npmjs.com/" target="_blank" rel="external">https://www.npmjs.com/</a></p>
+<p>或是透過指令搜尋<br><code>$ npm search</code></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="vox4cgleovn3lc0z" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="186s9xqteniwxp1j" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2014/12/31/什麼是npm?/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -146,7 +177,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-Framework/">Node.js Framework</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/心情/">心情</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker-學習筆記/">Docker 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git-學習筆記/">Git 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-Framework/">Node.js Framework</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/心情/">心情</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -155,7 +186,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/framework/">framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loopback/">loopback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB-The-Definitive-Guide/">MongoDB The Definitive Guide</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Replica-Set/">Replica Set</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sharded-Cluster/">Sharded Cluster</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/framework/">framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loopback/">loopback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodump/">mongodump</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongorestore/">mongorestore</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -164,7 +195,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -176,19 +207,23 @@
       <ul>
         
           <li>
-            <a href="/2015/01/06/LoopBack簡介/">LoopBack簡介</a>
+            <a href="/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/">Mongodb&#39;s Replica Set &amp; Sharded Cluster</a>
           </li>
         
           <li>
-            <a href="/2014/12/31/什麼是npm?/">什麼是npm?</a>
+            <a href="/2015/03/07/Docker使用指南/">Docker使用指南</a>
           </li>
         
           <li>
-            <a href="/2014/12/31/什麼是Node-js/">什麼是Node.js?</a>
+            <a href="/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/">MongoDB The Definitive Guide讀書筆記</a>
           </li>
         
           <li>
-            <a href="/2014/12/31/歸零/">歸零</a>
+            <a href="/2015/02/24/備份-還原MongoDB資料庫/">備份&amp;還原MongoDB資料庫</a>
+          </li>
+        
+          <li>
+            <a href="/2015/02/16/部署Mongodb-Sharded-Cluster/">部署Mongodb Sharded Cluster</a>
           </li>
         
       </ul>

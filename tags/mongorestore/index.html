@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: npm | 世紀末程式猿</title>
+  <title>Tag: mongorestore | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="寫多少看緣分...">
 <meta property="og:type" content="website">
 <meta property="og:title" content="世紀末程式猿">
-<meta property="og:url" content="http://miles990.github.io/tags/npm/">
+<meta property="og:url" content="http://miles990.github.io/tags/mongorestore/">
 <meta property="og:site_name" content="世紀末程式猿">
 <meta property="og:description" content="寫多少看緣分...">
 <meta name="twitter:card" content="summary">
@@ -67,14 +67,14 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-什麼是npm?" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-備份-還原MongoDB資料庫" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/12/31/什麼是npm?/" class="article-date">
-  <time datetime="2014-12-31T06:13:36.000Z" itemprop="datePublished">Dec 31 2014</time>
+    <a href="/2015/02/24/備份-還原MongoDB資料庫/" class="article-date">
+  <time datetime="2015-02-24T01:56:30.000Z" itemprop="datePublished">Feb 24 2015</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
+    <a class="article-category-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a>
   </div>
 
   </div>
@@ -85,7 +85,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/31/什麼是npm?/">npm &amp; package.json</a>
+      <a class="article-title" href="/2015/02/24/備份-還原MongoDB資料庫/">備份&amp;還原MongoDB資料庫</a>
     </h1>
   
 
@@ -93,29 +93,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="_"> </h4>
-<pre><code>npm - Node <span class="keyword">Package</span> Manager，Node 官方的組件管理方式，
-</code></pre><p>npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。<br>也可以讓使用者安裝已經在 <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> 官網註冊的 package。</p>
-<p><img src="http://dontkry.com/images/npm.png" alt=""></p>
-<p>現在安裝 Node.js 會自帶 npm<br><br></p>
-<h4 id="查看_npm_版本">查看 npm 版本</h4>
-<p><code>$npm -v</code><br><br></p>
-<h4 id="更新_npm_到最新的版本">更新 npm 到最新的版本</h4>
-<p><code>$npm install -g npm@latest</code><br><br></p>
-<h4 id="使用_npm_安裝套件">使用 npm 安裝套件</h4>
-<p>例如安裝 express 包(一個 web framework)<br><code>$npm install express</code><br><br></p>
-<p>可以在這找到有哪些包可以安裝<br><a href="https://www.npmjs.com/" target="_blank" rel="external">https://www.npmjs.com/</a></p>
-<p>或是透過指令搜尋<br><code>$ npm search</code></p>
+        <h2 id="Command_Line_Tool">Command Line Tool</h2>
+<h4 id="備份資料">備份資料</h4>
+<pre><code>mongodump
+</code></pre><p>範例:<br>將遠端Sever上的MongoDB資料備份 <em>Bet</em> 到本地端 <em>./tmp/Backup</em> 位置<br><code>$mongodump --host 172.16.18.65:27017 --db Bet --out ./tmp/Backup</code></p>
+<h4 id="還原資料">還原資料</h4>
+<pre><code>mongorestore
+</code></pre><p>範例:<br>將本地端 <em>./tmp/Backup</em> 位置的MongoDB備份資料還原到 <em>localhost:30001</em><br><code>$mongorestore --host localhost:30001 ./tmp/Backup/</code></p>
+<h4 id="經測試可以將single_instance_server的資料dump出來，restore到cluster_server_的_shards">經測試可以將single instance server的資料dump出來，restore到cluster server 的 shards</h4>
+<h4 id="PS:version_3-0-1_測試mongorestore_無法透過mogos上使用">PS:version 3.0.1 測試mongorestore 無法透過mogos上使用</h4>
+<p>在replica set 上的 primary上可以成功，未initiate的不能使用</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="186s9xqteniwxp1j" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/" data-id="poynrfl2y8vu75ct" class="article-share-link">Share</a>
       
-        <a href="http://miles990.github.io/2014/12/31/什麼是npm?/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodump/">mongodump</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongorestore/">mongorestore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
 
     </footer>
   </div>

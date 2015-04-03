@@ -3,17 +3,32 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: npm | 世紀末程式猿</title>
+  <title>MongoDB The Definitive Guide讀書筆記 | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="寫多少看緣分...">
-<meta property="og:type" content="website">
-<meta property="og:title" content="世紀末程式猿">
-<meta property="og:url" content="http://miles990.github.io/tags/npm/">
+  <meta name="description" content="紀錄讀MongoDB: The Definitive Guide這本書時，自己認為的重點
+DataBase名稱可以用任何 UTF-8 字串，並且符合以下規則
+
+空字串不是有效名稱
+不能包含/, \, ., “, *, &lt;, &gt;, :, |, ?, $, (a single space), or \0 (the null character)
+名稱有區分大小寫，即使在不分大小寫的檔案系統">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB The Definitive Guide讀書筆記">
+<meta property="og:url" content="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="寫多少看緣分...">
+<meta property="og:description" content="紀錄讀MongoDB: The Definitive Guide這本書時，自己認為的重點
+DataBase名稱可以用任何 UTF-8 字串，並且符合以下規則
+
+空字串不是有效名稱
+不能包含/, \, ., “, *, &lt;, &gt;, :, |, ?, $, (a single space), or \0 (the null character)
+名稱有區分大小寫，即使在不分大小寫的檔案系統">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="世紀末程式猿">
-<meta name="twitter:description" content="寫多少看緣分...">
+<meta name="twitter:title" content="MongoDB The Definitive Guide讀書筆記">
+<meta name="twitter:description" content="紀錄讀MongoDB: The Definitive Guide這本書時，自己認為的重點
+DataBase名稱可以用任何 UTF-8 字串，並且符合以下規則
+
+空字串不是有效名稱
+不能包含/, \, ., “, *, &lt;, &gt;, :, |, ?, $, (a single space), or \0 (the null character)
+名稱有區分大小寫，即使在不分大小寫的檔案系統">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -65,16 +80,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-什麼是npm?" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-MongoDB-The-Definitive-Guide讀書筆記" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/12/31/什麼是npm?/" class="article-date">
-  <time datetime="2014-12-31T06:13:36.000Z" itemprop="datePublished">Dec 31 2014</time>
+    <a href="/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" class="article-date">
+  <time datetime="2015-02-26T08:04:23.000Z" itemprop="datePublished">Feb 26 2015</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
+    <a class="article-category-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a>
   </div>
 
   </div>
@@ -84,8 +97,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/31/什麼是npm?/">npm &amp; package.json</a>
+    <h1 class="article-title" itemprop="name">
+      MongoDB The Definitive Guide讀書筆記
     </h1>
   
 
@@ -93,38 +106,66 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="_"> </h4>
-<pre><code>npm - Node <span class="keyword">Package</span> Manager，Node 官方的組件管理方式，
-</code></pre><p>npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。<br>也可以讓使用者安裝已經在 <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> 官網註冊的 package。</p>
-<p><img src="http://dontkry.com/images/npm.png" alt=""></p>
-<p>現在安裝 Node.js 會自帶 npm<br><br></p>
-<h4 id="查看_npm_版本">查看 npm 版本</h4>
-<p><code>$npm -v</code><br><br></p>
-<h4 id="更新_npm_到最新的版本">更新 npm 到最新的版本</h4>
-<p><code>$npm install -g npm@latest</code><br><br></p>
-<h4 id="使用_npm_安裝套件">使用 npm 安裝套件</h4>
-<p>例如安裝 express 包(一個 web framework)<br><code>$npm install express</code><br><br></p>
-<p>可以在這找到有哪些包可以安裝<br><a href="https://www.npmjs.com/" target="_blank" rel="external">https://www.npmjs.com/</a></p>
-<p>或是透過指令搜尋<br><code>$ npm search</code></p>
+        <p>紀錄讀<strong><a href="http://it-ebooks.info/book/2333/" target="_blank" rel="external">MongoDB: The Definitive Guide</a></strong>這本書時，自己認為的重點</p>
+<h4 id="DataBase名稱可以用任何_UTF-8_字串，並且符合以下規則">DataBase名稱可以用任何 UTF-8 字串，並且符合以下規則</h4>
+<ul>
+<li>空字串不是有效名稱</li>
+<li>不能包含/, \, ., “, *, &lt;, &gt;, :, |, ?, $, (a single space), or \0 (the null character)</li>
+<li>名稱有區分大小寫，即使在不分大小寫的檔案系統裡</li>
+<li>最大限制 64 bytes</li>
+</ul>
+<h4 id="預先留存的DataBase，含有特殊的含義">預先留存的DataBase，含有特殊的含義</h4>
+<ul>
+<li>admin : 代表root DataBase，如果一個user被加入此DB，該user自動繼承允許連到其他DB</li>
+<li>local : 這個DB永遠不會被replicated，慣用於儲存any collections that should be local to a single server</li>
+<li>config : 用來sharded setup，儲存shard的資訊</li>
+</ul>
+<h4 id="mongod預設儲存的資料路徑_/data/db/">mongod預設儲存的資料路徑 <em>/data/db/</em></h4>
+<h4 id="預設的port=27017">預設的port=27017</h4>
+<h4 id="可以用_—httpinterface_這個參數設定一個簡單的http_interface_他的port指定為主要port多1000。以預設port為例，可以連到http://localhost:28017觀看">可以用 —httpinterface 這個參數設定一個簡單的http interface 他的port指定為主要port多1000。以預設port為例，可以連到<a href="http://localhost:28017觀看" target="_blank" rel="external">http://localhost:28017觀看</a></h4>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="186s9xqteniwxp1j" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" data-id="kcf76tml60evks9l" class="article-share-link">Share</a>
       
-        <a href="http://miles990.github.io/2014/12/31/什麼是npm?/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB-The-Definitive-Guide/">MongoDB The Definitive Guide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
 
     </footer>
   </div>
   
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/07/Docker使用指南/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Docker使用指南
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/02/24/備份-還原MongoDB資料庫/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">備份&amp;還原MongoDB資料庫</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
 
-  
-  
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 </section>
         
           <aside id="sidebar">
@@ -211,11 +252,13 @@
 <script>
   var disqus_shortname = 'miles990';
   
+  var disqus_url = 'http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>

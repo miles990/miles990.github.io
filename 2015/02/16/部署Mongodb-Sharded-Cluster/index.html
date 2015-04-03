@@ -3,17 +3,29 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2015 | 世紀末程式猿</title>
+  <title>部署Mongodb Sharded Cluster | 世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="寫多少看緣分...">
-<meta property="og:type" content="website">
-<meta property="og:title" content="世紀末程式猿">
-<meta property="og:url" content="http://miles990.github.io/archives/2015/">
+  <meta name="description" content="可擴展的MongoDB解決方案
+官方文件:http://docs.mongodb.org/manual/tutorial/deploy-shard-cluster/
+本地端部署 MongoDB Shard Cluster
+( 2 Router Server, 3 Config Server, 3 Shard Server )的shell script
+123456789101112131415">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署Mongodb Sharded Cluster">
+<meta property="og:url" content="http://miles990.github.io/2015/02/16/部署Mongodb-Sharded-Cluster/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="寫多少看緣分...">
+<meta property="og:description" content="可擴展的MongoDB解決方案
+官方文件:http://docs.mongodb.org/manual/tutorial/deploy-shard-cluster/
+本地端部署 MongoDB Shard Cluster
+( 2 Router Server, 3 Config Server, 3 Shard Server )的shell script
+123456789101112131415">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="世紀末程式猿">
-<meta name="twitter:description" content="寫多少看緣分...">
+<meta name="twitter:title" content="部署Mongodb Sharded Cluster">
+<meta name="twitter:description" content="可擴展的MongoDB解決方案
+官方文件:http://docs.mongodb.org/manual/tutorial/deploy-shard-cluster/
+本地端部署 MongoDB Shard Cluster
+( 2 Router Server, 3 Config Server, 3 Shard Server )的shell script
+123456789101112131415">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -65,322 +77,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Mongodb-s-Replica-Set-Sharded-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/" class="article-date">
-  <time datetime="2015-03-24T07:29:30.000Z" itemprop="datePublished">Mar 24 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/">Mongodb&#39;s Replica Set &amp; Sharded Cluster</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="MongoDB_Replication"><a href="http://docs.mongodb.org/manual/replication/" target="_blank" rel="external">MongoDB Replication</a></h2>
-<p><img src="http://docs.mongodb.org/manual/_images/replica-set-read-write-operations-primary.png" alt="Primary 接受所有從client傳來的寫入操作"></p>
-<p><strong>Primary</strong> 接受所有從client傳來的寫入操作</p>
-<p><strong>Replica set</strong> (副本集) 只會有一個 <strong>Primary</strong>，因為只有一個成員接受寫入操作。副本集提供嚴格的一致性，對所有從 <strong>Primary</strong> 的讀取。</p>
-<p>為了支持複製操作，<strong>Primary</strong> 記錄其所有對其數據集的操作到他的 <a href="http://docs.mongodb.org/manual/core/replica-set-oplog/" target="_blank" rel="external">oplog</a> (operations log)。</p>
-<p><strong>Secondaries</strong> 複製 <strong>Primary</strong> 的 oplog 到自己的數據集。</p>
-<p><strong>Secondaries</strong> 的數據集印射 <strong>Primary</strong> 的數據集。</p>
-<p>如果 <strong>Primary</strong> 不能用，Replica set 會選出一個 <strong>Secondary</strong> 成為 <strong>Primary</strong>。</p>
-<p>預設情況下，clients 從 <strong>Primary</strong> 讀取，但是 clients 可以指定一個喜好的來發送讀取操作到 <strong>Secondary</strong>。從 <strong>Secondaries</strong> 讀取返回的資料可能不會反射 <strong>Primary</strong> 的狀態。</p>
-<p><img src="http://docs.mongodb.org/manual/_images/replica-set-primary-with-two-secondaries.png" alt=""></p>
-<p>你可以增加一個額外的 mongod 實例作為 replica set的 <a href="http://docs.mongodb.org/manual/core/replica-set-arbiter/" target="_blank" rel="external"><strong>Arbiter</strong> </a>(仲裁者)。它不用來維護數據集，只存在於選舉投票。</p>
-<p>一個 <strong>Secondary</strong> 可能會經由一次選舉變為 <strong>Primary</strong>。</p>
-<p><img src="http://docs.mongodb.org/manual/_images/replica-set-primary-with-secondary-and-arbiter.png" alt=""></p>
-<p><img src="http://docs.mongodb.org/manual/_images/replica-set-trigger-election.png" alt=""></p>
-<h2 id="ps:"><strong>ps:</strong></h2>
-<ul>
-<li><p>預設當作primary的server未經initiate()不會被設定為primary，無法在上面進行任何DB操作</p>
-</li>
-<li><p>作為secondary的server在arbiter未被建立前不會跟primary同步資料</p>
-</li>
-</ul>
-<h2 id="MongoDB_Sharding"><a href="http://docs.mongodb.org/manual/sharding/" target="_blank" rel="external">MongoDB Sharding</a></h2>
-<p><strong>Sharding</strong> 是將儲存資料跨不同機器的方法。</p>
-<p>高查詢率會消耗 Server CPU 的能力，大型資料超過單一機器儲存的上限。</p>
-<p>為了解決這些問題資料庫有兩種解決方式：</p>
-<ul>
-<li><strong>Vertical scaling</strong> : 垂直擴展，就是增加 CPU、增加 Ram 跟增加更多的儲存資源。</li>
-<li><strong>Horizontal scaling</strong> : 水平擴展，使用 <strong>sharding</strong>(分片)機制，分割數據集使之可以跨越在多個 Server 中，或<strong>shards</strong>(碎片)。</li>
-</ul>
-<p>每個 <strong>shard</strong> 都是一個獨立的資料庫，很多個 <strong>shards</strong> 可以組成單一個邏輯資料庫。</p>
-<p><img src="http://docs.mongodb.org/manual/_images/sharded-collection.png" alt=""></p>
-<p>Sharding 減少了每個 Server 需要儲存的資料量。當 Cluster(集群)增長時，每個 <strong>Shard</strong> 儲存了更少的資料量。</p>
-<p>舉例來說，一個資料庫擁有 <strong>1TB</strong> 的資料數據，分成4個 <strong>shards</strong> 來存，每個需管理 <strong>256GB</strong> 的資料量。</p>
-<p>假如分配給40個 <strong>shards</strong>，每個 shard 只需管理 <strong>25GB</strong> 的資料而已。</p>
-<h4 id="一個_MongoDB_的_Sharded_Cluster_由以下元件組成_:_shards，_query_routers_及_config_servers。">一個 MongoDB 的 Sharded Cluster 由以下元件組成 : <a href="http://docs.mongodb.org/manual/reference/glossary/#term-shard" target="_blank" rel="external">shards</a>， <a href="http://docs.mongodb.org/manual/reference/glossary/#term-mongos" target="_blank" rel="external">query routers</a> 及 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-config-server" target="_blank" rel="external">config servers</a>。</h4>
-<p><img src="http://docs.mongodb.org/manual/_images/sharded-cluster-production-architecture.png" alt=""></p>
-<ul>
-<li><p><strong>Shards</strong> : 用來儲存資料，為了提高可用性和資料的一致性，在 production 的<br>Sharded Cluster 每個 Shard 通常是一個 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-replica-set" target="_blank" rel="external">Replica Set</a> (副本集)。</p>
-</li>
-<li><p><strong>Query Routers</strong> : 在 MongoDB 裡稱為 <a href="http://docs.mongodb.org/manual/reference/program/mongos/#bin.mongos" target="_blank" rel="external">mongos</a>，作為讓 client 端可以直接操作到對應的 shards的一個介面。一個 Sharded Cluster 可以擁有多個 Routers 來分擔 client 發過來的要求。</p>
-</li>
-<li><p><strong>Config servers</strong> : 儲存 cluster 的 metadata(用來描述資料屬性)</p>
-</li>
-</ul>
-<h2 id="Data_Partitions(資料分割)">Data Partitions(資料分割)</h2>
-<p>Sharding partitions a collection’s data by the shard key.</p>
-<h4 id="Shard_Keys">Shard Keys</h4>
-<p>要對一個collection做分片(shard)，需要選擇 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-shard-key" target="_blank" rel="external"><strong>shard key</strong></a>。</p>
-<p>MongoDB 由 shard key 將資料分割成許多的 <strong>chunks</strong> 平均分佈在 shards。依據 range based 和 hash based  不同種的 shard key，可以對資料做不同的儲存策略。</p>
-<h4 id="Range_Based_Sharding">Range Based Sharding</h4>
-<p><img src="http://docs.mongodb.org/manual/_images/sharding-range-based.png" alt=""></p>
-<h4 id="Hash_Based_Sharding">Hash Based Sharding</h4>
-<p><img src="http://docs.mongodb.org/manual/_images/sharding-hash-based.png" alt=""></p>
-<h4 id="Customized_Data_Distribution_with_Tag_Aware_Sharding">Customized Data Distribution with <a href="http://docs.mongodb.org/manual/core/tag-aware-sharding/" target="_blank" rel="external">Tag Aware Sharding</a></h4>
-<h2 id="維持分散資料平衡">維持分散資料平衡</h2>
-<p>MongoDB使用兩個背景程式處理確保一個 blanced cluster：<strong>splitting</strong> &amp; <strong>balancer</strong>.</p>
-<ul>
-<li><h4 id="Splitting">Splitting</h4>
-<p>Splitting，一個背景程式，確保 chunks 的成長不會太大。當一個 chunk 成長為指定的 chunk 大小(<a href="http://docs.mongodb.org/manual/core/sharding-chunk-splitting/#sharding-chunk-size" target="_blank" rel="external">specified chunk size</a>)時，會將 chunk 分成兩半。</p>
-<p>MongoDB 預設的 chunk size 為 64 MB，你可以<a href="http://docs.mongodb.org/manual/tutorial/modify-chunk-size-in-sharded-cluster/" target="_blank" rel="external">增加或減少 chunks size</a>。</p>
-<ol>
-<li>比較小的 chunks，會讓資料更均勻的分佈，但是在資料搬移時花費更多的成本。</li>
-<li>比較大的 chunks，無論是從網路的角度和在內部開銷方面，讓資料做比較少的搬移。但是這些效率可能會造成資料分佈不均的代價。</li>
-<li>chunk 的大小，會影響每個 chunk 搬移(migrate)的最大文件數量。</li>
-</ol>
-</li>
-</ul>
-<p><img src="http://docs.mongodb.org/manual/_images/sharding-splitting.png" alt=""></p>
-<ul>
-<li><h4 id="Blancing">Blancing</h4>
-<p>Blancer，一個背景程式，來管理 chunks 資料的搬移。Blancer 可以藉由 cluster 任何的 query routers 來被執行。</p>
-<p><a href="http://docs.mongodb.org/manual/tutorial/manage-sharded-cluster-balancer/" target="_blank" rel="external">Manage Sharded Cluster Blancer </a></p>
-</li>
-</ul>
-<p><img src="http://docs.mongodb.org/manual/_images/sharding-migrating.png" alt=""></p>
-<h2 id="實作練習">實作練習</h2>
-<p>使用 MongoDB 這樣做的優點，對延展(scaling)方便資料，並擁有一定的可靠度。當資料儲存空間快不足時，可以對其增加新的 shards，增加 cluster server 的儲存量。</p>
-<p>已有三台可用的 server 機，利用這三台機器組成一個 Sharded Cluster Server。</p>
-<p>目前規劃架構，每台機器各擁有一個 query router server (mongos) ，各一個 config server，這三台機器組成的 cluster server 擁有 3 個 cluster shards，每個 shard 都是一個副本集 (replica set)，分散在3台機器裡。</p>
-<h2 id="movePrimary"><a href="http://docs.mongodb.org/manual/reference/command/movePrimary/" target="_blank" rel="external">movePrimary</a></h2>
-<p><a href="http://duoyun.org/topic/519dac36e38d26a40a0b8b9c" target="_blank" rel="external">movePrimary命令的妙用</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/" data-id="ccv29hyb27xyoksy" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Replica-Set/">Replica Set</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sharded-Cluster/">Sharded Cluster</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Docker使用指南" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/03/07/Docker使用指南/" class="article-date">
-  <time datetime="2015-03-06T16:29:55.000Z" itemprop="datePublished">Mar 7 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Docker-學習筆記/">Docker 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/07/Docker使用指南/">Docker使用指南</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="環境建置步驟">環境建置步驟</h4>
-<ol>
-<li><a href="http://www.vagrantup.com/downloads.html" target="_blank" rel="external">Vagrant下載頁</a>安裝Vagrant</li>
-<li><a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="external">Virtualbox下載頁</a>安裝<ul>
-<li>VirtualBox platform packages</li>
-<li>VirtualBox Extension Pack</li>
-</ul>
-</li>
-<li>建立工作目錄<ul>
-<li><code>$sudo mkdir docker-demo &amp;&amp; cd docker-demo</code></li>
-</ul>
-</li>
-<li>產生Vagrantfile =&gt; ubuntu/trusty64: Ubuntu 14.04 LTS (Trusty Tahr) 64-bit<ul>
-<li><code>$sudo vagrant init ubuntu/trusty64</code></li>
-</ul>
-</li>
-<li>根據Vagrantfile啟動定義好的虛擬機<ul>
-<li><code>$sudo vagrant up</code></li>
-</ul>
-</li>
-<li>登入vagrant<ul>
-<li><code>$sudo vagrant ssh</code></li>
-</ul>
-</li>
-<li>登入vagrant<ul>
-<li><code>$sudo vagrant exit</code></li>
-</ul>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/03/07/Docker使用指南/" data-id="zktdqxy30kdxpijh" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/03/07/Docker使用指南/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-MongoDB-The-Definitive-Guide讀書筆記" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" class="article-date">
-  <time datetime="2015-02-26T08:04:23.000Z" itemprop="datePublished">Feb 26 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/">MongoDB The Definitive Guide讀書筆記</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>紀錄讀<strong><a href="http://it-ebooks.info/book/2333/" target="_blank" rel="external">MongoDB: The Definitive Guide</a></strong>這本書時，自己認為的重點</p>
-<h4 id="DataBase名稱可以用任何_UTF-8_字串，並且符合以下規則">DataBase名稱可以用任何 UTF-8 字串，並且符合以下規則</h4>
-<ul>
-<li>空字串不是有效名稱</li>
-<li>不能包含/, \, ., “, *, &lt;, &gt;, :, |, ?, $, (a single space), or \0 (the null character)</li>
-<li>名稱有區分大小寫，即使在不分大小寫的檔案系統裡</li>
-<li>最大限制 64 bytes</li>
-</ul>
-<h4 id="預先留存的DataBase，含有特殊的含義">預先留存的DataBase，含有特殊的含義</h4>
-<ul>
-<li>admin : 代表root DataBase，如果一個user被加入此DB，該user自動繼承允許連到其他DB</li>
-<li>local : 這個DB永遠不會被replicated，慣用於儲存any collections that should be local to a single server</li>
-<li>config : 用來sharded setup，儲存shard的資訊</li>
-</ul>
-<h4 id="mongod預設儲存的資料路徑_/data/db/">mongod預設儲存的資料路徑 <em>/data/db/</em></h4>
-<h4 id="預設的port=27017">預設的port=27017</h4>
-<h4 id="可以用_—httpinterface_這個參數設定一個簡單的http_interface_他的port指定為主要port多1000。以預設port為例，可以連到http://localhost:28017觀看">可以用 —httpinterface 這個參數設定一個簡單的http interface 他的port指定為主要port多1000。以預設port為例，可以連到<a href="http://localhost:28017觀看" target="_blank" rel="external">http://localhost:28017觀看</a></h4>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" data-id="kcf76tml60evks9l" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB-The-Definitive-Guide/">MongoDB The Definitive Guide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-備份-還原MongoDB資料庫" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/02/24/備份-還原MongoDB資料庫/" class="article-date">
-  <time datetime="2015-02-24T01:56:30.000Z" itemprop="datePublished">Feb 24 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/24/備份-還原MongoDB資料庫/">備份&amp;還原MongoDB資料庫</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Command_Line_Tool">Command Line Tool</h2>
-<h4 id="備份資料">備份資料</h4>
-<pre><code>mongodump
-</code></pre><p>範例:<br>將遠端Sever上的MongoDB資料備份 <em>Bet</em> 到本地端 <em>./tmp/Backup</em> 位置<br><code>$mongodump --host 172.16.18.65:27017 --db Bet --out ./tmp/Backup</code></p>
-<h4 id="還原資料">還原資料</h4>
-<pre><code>mongorestore
-</code></pre><p>範例:<br>將本地端 <em>./tmp/Backup</em> 位置的MongoDB備份資料還原到 <em>localhost:30001</em><br><code>$mongorestore --host localhost:30001 ./tmp/Backup/</code></p>
-<h4 id="經測試可以將single_instance_server的資料dump出來，restore到cluster_server_的_shards">經測試可以將single instance server的資料dump出來，restore到cluster server 的 shards</h4>
-<h4 id="PS:version_3-0-1_測試mongorestore_無法透過mogos上使用">PS:version 3.0.1 測試mongorestore 無法透過mogos上使用</h4>
-<p>在replica set 上的 primary上可以成功，未initiate的不能使用</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/" data-id="poynrfl2y8vu75ct" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MongoDB/">MongoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodump/">mongodump</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongorestore/">mongorestore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-部署Mongodb-Sharded-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-部署Mongodb-Sharded-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/02/16/部署Mongodb-Sharded-Cluster/" class="article-date">
   <time datetime="2015-02-16T03:38:45.000Z" itemprop="datePublished">Feb 16 2015</time>
@@ -397,8 +94,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/16/部署Mongodb-Sharded-Cluster/">部署Mongodb Sharded Cluster</a>
+    <h1 class="article-title" itemprop="name">
+      部署Mongodb Sharded Cluster
     </h1>
   
 
@@ -428,179 +125,35 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Git" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/01/20/Git/" class="article-date">
-  <time datetime="2015-01-19T16:01:55.000Z" itemprop="datePublished">Jan 20 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Git-學習筆記/">Git 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+    <a href="/2015/02/24/備份-還原MongoDB資料庫/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/20/Git/">Git</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="參考:_http://git-scm-com/book/zh-tw/v1/">參考: <a href="http://git-scm.com/book/zh-tw/v1/" target="_blank" rel="external">http://git-scm.com/book/zh-tw/v1/</a></h4>
-<h2 id="Git_有三種檔案狀態的表達方式">Git 有三種檔案狀態的表達方式</h2>
-<ul>
-<li>committed(已提交)</li>
-<li>modified(已修改)</li>
-<li>staged(暫存)</li>
-</ul>
-<h2 id="常用指令">常用指令</h2>
-<ul>
-<li><p><strong>初始化 git 儲存庫:</strong> 切換到欲使用版本控管的目錄下，執行以下命令<br><code>$git init</code><br>此動作會在目錄下建立名為 <strong>.git</strong> 的子資料夾，此資料夾下存放 git 相關的記錄檔案</p>
-</li>
-<li><p><strong>將目標 &lt;檔案&gt; or &lt;目錄&gt; 加到準備提交的狀態:</strong> (準備commit，尚未送出)<br><code>$git add &lt;檔案&gt;</code> or <code>$git add &lt;目錄&gt;</code></p>
-</li>
-<li><p><strong>複製現有 &lt;儲存庫(reposity)&gt; </strong><br><code>$git clone &lt;repo&gt;</code></p>
-</li>
-<li><p><strong>檢視檔案的狀態</strong><br><code>$git status</code></p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/01/20/Git/" data-id="hxaba79l4xlvfp6u" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/01/20/Git/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-LoopBack簡介" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/01/06/LoopBack簡介/" class="article-date">
-  <time datetime="2015-01-06T09:35:57.000Z" itemprop="datePublished">Jan 6 2015</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-Framework/">Node.js Framework</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+          備份&amp;還原MongoDB資料庫
         
+      </div>
+    </a>
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/06/LoopBack簡介/">LoopBack簡介</a>
-    </h1>
   
+    <a href="/2015/01/20/Git/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Git</div>
+    </a>
+  
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="方便建立_API_和連接後端資料的_Node-js_Framework">方便建立 API 和連接後端資料的 Node.js Framework</h4>
-<p><img src="http://img.phperz.com/data/img/20140723/1406090751_5056.png" alt=""></p>
-<h1 id="關於"><code>關於</code></h1>
-<h4 id="LoopBack_是一個高度擴展、開源的_Node-js_框架">LoopBack 是一個高度擴展、開源的 Node.js 框架</h4>
-<ul>
-<li>快速建立動態的 <strong>end-to-end REST APIs</strong></li>
-<li>連接設備跟瀏覽器的數據跟服務</li>
-<li>採用 <strong>Android</strong>，<strong>IOS</strong> 和 <strong>AngularJS</strong> 軟件開發工具包能夠輕鬆地創建客戶端應用程序</li>
-<li>附加組件含，推播、檔案管理、第三方登入及地理定位</li>
-<li>使用 <strong>StrongLoop Arc</strong> 做到可視化編輯，部署和監控 LoopBack apps</li>
-<li><strong>LoopBack API gateway</strong> 作為使用 API 的顧客 (clients) 和 API 提供者的中間人達到外部化、安全及管理的 APIs</li>
-<li>可運行在本地或雲端</li>
-</ul>
-<h1 id="特點"><code>特點</code></h1>
-<ul>
-<li><h4 id="快速建立_model_及創建_REST_的_API">快速建立 model 及創建 REST 的 API</h4>
-<ul>
-<li>簡單易用的 <strong>CLI</strong> 精靈 </li>
-<li>如果你有 schema 的話根據他創建 models</li>
-<li>如果沒有則建立動態 models</li>
-<li>內置的 API 瀏覽器</li>
-</ul>
-</li>
-<li><h4 id="簡易的認證跟授權設置">簡易的認證跟授權設置</h4>
-<ul>
-<li>內置基於角色的存取控制</li>
-<li>oAuth 使用者跟註冊模型</li>
-<li>使用 CLI 跟 JSON 格式增加個人設置策略</li>
-<li>瀏覽器支援 ( JSONP 和 CORS )</li>
-</ul>
-</li>
-<li><h4 id="支持模型關係">支持模型關係</h4>
-<ul>
-<li>定義 hasMany，belongsTo，hasAndBelongsToMany 關係</li>
-<li>自動生成相應關係的 REST 端點</li>
-</ul>
-</li>
-<li><h4 id="MIT_開源許可">MIT 開源許可</h4>
-<ul>
-<li>雙許可：MIT 開源許可或 StrongLoop 許可</li>
-</ul>
-</li>
-<li><h4 id="連接後端數據儲存支援">連接後端數據儲存支援</h4>
-<ul>
-<li>MySQL, Oracle, MongoDB, Postgres 和其他</li>
-<li>其他 REST 服務</li>
-<li>Oracle, MySQL, PostgreSQL 和 SQL Server 探索 APIs</li>
-</ul>
-</li>
-<li><h4 id="即席查詢支援">即席查詢支援</h4>
-<ul>
-<li>裝置上的動態查詢，瀏覽器跟 Server</li>
-<li>針對關係資料庫支援 NoSQL 風格的查詢</li>
-</ul>
-</li>
-</ul>
-<h1 id="開始使用"><code>開始使用</code></h1>
-<h4 id="安裝">安裝</h4>
-<p>假設你已經安裝 Node.js<br>透過 npm 安裝 LoopBack 應用的 StrongLoop 工具</p>
-<h2 id="$_npm_install_-g_strongloop"><code>$ npm install -g strongloop</code></h2>
-<h4 id="建立_app">建立 app</h4>
-<p>建立一個 “Hello World” LoopBack app</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/01/06/LoopBack簡介/" data-id="s0c8d7fs7zoji81v" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2015/01/06/LoopBack簡介/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/framework/">framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/loopback/">loopback</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
 
-  
-  
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 </section>
         
           <aside id="sidebar">
@@ -687,11 +240,13 @@
 <script>
   var disqus_shortname = 'miles990';
   
+  var disqus_url = 'http://miles990.github.io/2015/02/16/部署Mongodb-Sharded-Cluster/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
