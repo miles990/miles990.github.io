@@ -5,15 +5,15 @@
   
   <title>世紀末程式猿</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="寫多少看緣分...">
+  <meta name="description" content="吱吱...">
 <meta property="og:type" content="website">
 <meta property="og:title" content="世紀末程式猿">
 <meta property="og:url" content="http://miles990.github.io/">
 <meta property="og:site_name" content="世紀末程式猿">
-<meta property="og:description" content="寫多少看緣分...">
+<meta property="og:description" content="吱吱...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="世紀末程式猿">
-<meta name="twitter:description" content="寫多少看緣分...">
+<meta name="twitter:description" content="吱吱...">
 
   
     <link rel="alternative" href="/atom.xml" title="世紀末程式猿" type="application/atom+xml">
@@ -39,7 +39,7 @@
       </h1>
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">傳說中有隻猴子，引發了世界末日...</a>
+          <a href="/" id="subtitle">當這個世界只剩下猴子...</a>
         </h2>
       
     </div>
@@ -66,6 +66,218 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-深入淺出Node-js讀書心得-二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/23/深入淺出Node-js讀書心得-二/" class="article-date">
+  <time datetime="2015-04-23T08:14:22.000Z" itemprop="datePublished">Apr 23 2015</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/深入淺出Node-js讀書心得/">深入淺出Node.js讀書心得</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/23/深入淺出Node-js讀書心得-二/">深入淺出Node.js讀書心得(二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Chapter_2_:_模組機制"><a href="#">Chapter 2 : 模組機制</a></h1>
+<h2 id="CommonJS的模組規範">CommonJS的模組規範</h2>
+<ol>
+<li>模組引用<br>EX:<br><code>var math = require(&#39;math&#39;);</code></li>
+<li>模組定義</li>
+<li>模組識別字</li>
+</ol>
+<h2 id="在_Node_引入模組時，需要經歷以下三個步驟:">在 Node 引入模組時，需要經歷以下三個步驟:</h2>
+<ol>
+<li>路徑分析</li>
+<li>檔案定位</li>
+<li>編譯執行</li>
+</ol>
+<h2 id="目錄分析與套件">目錄分析與套件</h2>
+<p>Node 首先在當前目錄下找尋 package.json (CommonJS 套件規範定義的套件描述檔)，接著透過 JSON.parse() 解析套件描述物件，從中取出 main 屬性指定的檔案名稱進行定位。<br>假如 main 屬性指定的檔名錯誤，或者根本沒有 package.json 檔，Node 會把 index 當作預設的檔案，然後依序尋找 index.js、index.node、index.json。</p>
+<h2 id="模組編譯">模組編譯</h2>
+<p>編譯和執行是含括檔案模組的最後一個階段。定位實際的檔案後，Node 會新建一個模組物件，然後根據路徑載入並編譯。<br>針對不一樣的副檔名，載入方法也不盡相同，如下：</p>
+<ul>
+<li>.js 文件<br>透過 fs 模組同步讀取檔案後編譯</li>
+<li>.node 文件<br>這是用 C/C++ 編寫的擴充檔，透過 dlopen() 方法載入最後編譯而成的檔案</li>
+<li>.json 文件<br>透過 fs 模組同步讀取檔案後，再以 JSON.parse() 解析返回結果</li>
+<li>其餘副檔名的文件<br>都被當成 .js 文件載入</li>
+</ul>
+<h2 id="套件與NPM">套件與NPM</h2>
+<h4 id="完全符合CommonJS規範的套件目錄應該包含以下檔案">完全符合CommonJS規範的套件目錄應該包含以下檔案</h4>
+<ul>
+<li>package.json：套件描述檔</li>
+<li>bin：存放可執行二進位檔的目錄</li>
+<li>lib：存放 JavaScript 程式碼的目錄</li>
+<li>doc：存放文件的目錄</li>
+<li>test：存放單元測試案例的程式碼</li>
+</ul>
+<h4 id="在套件描述檔_(package-json)_的規範中，NPM_實際需要的欄位主要有">在套件描述檔 (package.json) 的規範中，NPM 實際需要的欄位主要有</h4>
+<ul>
+<li>name</li>
+<li>version</li>
+<li>description</li>
+<li>keywords</li>
+<li>repositories</li>
+<li>author</li>
+<li>bin</li>
+<li>main</li>
+<li>scripts</li>
+<li>engines</li>
+<li>dependencies</li>
+<li>devDependencies</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://miles990.github.io/2015/04/23/深入淺出Node-js讀書心得-二/" data-id="ex1zc0gu5yna1noe" class="article-share-link">Share</a>
+      
+        <a href="http://miles990.github.io/2015/04/23/深入淺出Node-js讀書心得-二/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深入淺出Node-js讀書心得-二/">深入淺出Node.js讀書心得(二)</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/讀書心得/">讀書心得</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-深入淺出Node-js讀書心得-ㄧ" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/23/深入淺出Node-js讀書心得-ㄧ/" class="article-date">
+  <time datetime="2015-04-23T07:00:50.000Z" itemprop="datePublished">Apr 23 2015</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/深入淺出Node-js讀書心得/">深入淺出Node.js讀書心得</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/23/深入淺出Node-js讀書心得-ㄧ/">深入淺出Node.js讀書心得(ㄧ)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Chapter_1_:_Node_簡介"><a href="#">Chapter 1 : Node 簡介</a></h1>
+<h2 id="Node的特點:">Node的特點:</h2>
+<ul>
+<li><strong>非同步 (Asynchronous) I/O</strong></li>
+<li><strong>事件 (Events) 與回呼函數 (Callback functions)</strong></li>
+<li><strong>單執行緒 (Single thread)</strong><ul>
+<li>優點：<ol>
+<li>不用像多執行緒那般處處在意狀態的同步問題</li>
+<li>不會有鎖死 (deadlock) 的情況</li>
+<li>沒有執行緒上下文交換 (content switch) 時帶來的額外性能代價</li>
+</ol>
+</li>
+<li>缺點：<ol>
+<li>無法利用多核 CPU</li>
+<li>錯誤會引起整個應用程式退出 (crash?)，值得一再考驗其健壯性</li>
+<li>大量計算佔用 CPU，導致無法繼續呼叫非同步 I/O<font color="red"><br><code>Node 採用和 Html5 的 Web Workers 相同概念來解決單執行緒中大量計算的問題：child_process</code><br></font></li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>跨平台</strong></li>
+</ul>
+<h2 id="Node的應用場景">Node的應用場景</h2>
+<ul>
+<li>I/O 密集型</li>
+<li>是否不擅長 CPU 密集型<font color="red"><br><code>適當調整和分解大型運算為多個小任務，便能讓運算適時釋放，不阻塞 I/O 呼叫的啟動，這樣既可同時享受並行非同步 I/O 的好處，又能充分利用 CPU。</code><br></font></li>
+<li>與就有系統和平共存</li>
+<li>分散式應用</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://miles990.github.io/2015/04/23/深入淺出Node-js讀書心得-ㄧ/" data-id="te69h0nd02ba5z3j" class="article-share-link">Share</a>
+      
+        <a href="http://miles990.github.io/2015/04/23/深入淺出Node-js讀書心得-ㄧ/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/深入淺出Node-js讀書心得-一/">深入淺出Node.js讀書心得(一)</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/讀書心得/">讀書心得</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Node-js讀書會" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/18/Node-js讀書會/" class="article-date">
+  <time datetime="2015-04-18T08:19:16.000Z" itemprop="datePublished">Apr 18 2015</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/深入淺出Node-js讀書心得/">深入淺出Node.js讀書心得</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/18/Node-js讀書會/">Node.js讀書會</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>因緣際會在 Facebook 上看到一個 Node.js 讀書會的活動。<br>他們挑了這一本書。</p>
+<p><img src="http://d2hsbzg80yxel6.cloudfront.net/images/85173/medium/PG21433.jpg" alt="深入淺出Node.js"><br><a href="http://www.tenlong.com.tw/items/9862019409?item_id=997343" target="_blank" rel="external">深入淺出Node.js</a>，這本在天瓏書局找得到。</p>
+<p>大概翻了一下，有一點深度。<br>適合有一點程式基礎，剛接觸 Node.js，想要深入了解 Node.js的底層運作方式的人。</p>
+<p>之後會把看書的一些心得或重點記錄在這裡。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://miles990.github.io/2015/04/18/Node-js讀書會/" data-id="n23t4aj6n9yk5hhb" class="article-share-link">Share</a>
+      
+        <a href="http://miles990.github.io/2015/04/18/Node-js讀書會/#disqus_thread" class="article-comment-link">Comments</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/讀書會/">讀書會</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Mongodb-s-Replica-Set-Sharded-Cluster" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -178,7 +390,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/" data-id="ccv29hyb27xyoksy" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/" data-id="dvd679ti6hvfvhcb" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -251,7 +463,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/03/07/Docker使用指南/" data-id="zktdqxy30kdxpijh" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/03/07/Docker使用指南/" data-id="dkms6c0y6prq7rnl" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/03/07/Docker使用指南/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -312,7 +524,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" data-id="kcf76tml60evks9l" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/" data-id="vk2bc6vjc5ctstzv" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -366,7 +578,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/" data-id="poynrfl2y8vu75ct" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/" data-id="rqdbuyjzszh2ow5m" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/02/24/備份-還原MongoDB資料庫/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -418,7 +630,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/02/16/部署Mongodb-Sharded-Cluster/" data-id="nycyb5guku96kf0a" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/02/16/部署Mongodb-Sharded-Cluster/" data-id="k2wzm3587l47d5v2" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/02/16/部署Mongodb-Sharded-Cluster/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -480,7 +692,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/01/20/Git/" data-id="hxaba79l4xlvfp6u" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/01/20/Git/" data-id="4id1pgt4gimghflb" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/01/20/Git/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -586,7 +798,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2015/01/06/LoopBack簡介/" data-id="s0c8d7fs7zoji81v" class="article-share-link">Share</a>
+      <a data-url="http://miles990.github.io/2015/01/06/LoopBack簡介/" data-id="u0pubgifj1tnid8w" class="article-share-link">Share</a>
       
         <a href="http://miles990.github.io/2015/01/06/LoopBack簡介/#disqus_thread" class="article-comment-link">Comments</a>
       
@@ -600,191 +812,10 @@
 
 
   
-    <article id="post-什麼是npm?" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/12/31/什麼是npm?/" class="article-date">
-  <time datetime="2014-12-31T06:13:36.000Z" itemprop="datePublished">Dec 31 2014</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/31/什麼是npm?/">npm &amp; package.json</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="_"> </h4>
-<pre><code>npm - Node <span class="keyword">Package</span> Manager，Node 官方的組件管理方式，
-</code></pre><p>npm 透過 command line 執行，並使用 package.json 檔案幫 node.js app 管理使用組件依賴關係。<br>也可以讓使用者安裝已經在 <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> 官網註冊的 package。</p>
-<p><img src="http://dontkry.com/images/npm.png" alt=""></p>
-<p>現在安裝 Node.js 會自帶 npm<br><br></p>
-<h4 id="查看_npm_版本">查看 npm 版本</h4>
-<p><code>$npm -v</code><br><br></p>
-<h4 id="更新_npm_到最新的版本">更新 npm 到最新的版本</h4>
-<p><code>$npm install -g npm@latest</code><br><br></p>
-<h4 id="使用_npm_安裝套件">使用 npm 安裝套件</h4>
-<p>例如安裝 express 包(一個 web framework)<br><code>$npm install express</code><br><br></p>
-<p>可以在這找到有哪些包可以安裝<br><a href="https://www.npmjs.com/" target="_blank" rel="external">https://www.npmjs.com/</a></p>
-<p>或是透過指令搜尋<br><code>$ npm search</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是npm?/" data-id="186s9xqteniwxp1j" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2014/12/31/什麼是npm?/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/npm/">npm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-什麼是Node-js" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/12/31/什麼是Node-js/" class="article-date">
-  <time datetime="2014-12-31T02:58:06.000Z" itemprop="datePublished">Dec 31 2014</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/31/什麼是Node-js/">什麼是Node.js?</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="_"> </h4>
-<pre><code>Node.js 是一個平台。採用 Chrome 瀏覽器的 Javascript 引擎 - V8，為了可以簡單的建立，快速、可擴展的網路應用。    
-</code></pre><p><br></p>
-<p><img src="http://joyeur.files.wordpress.com/2011/07/node.png" alt=""></p>
-<h2 id="Node-js">Node.js</h2>
-<ul>
-<li>Server - side javascript</li>
-<li>單一執行緒事件迴圈 (single-threaded event loop)</li>
-<li>使用事件驅動 (event-driven)，非阻斷式的 IO(non-blocking I/O) 模型。這讓他輕量並且有效率。</li>
-<li>適合在分散式的裝置上，做資料密集、即時的處理程序。<br><br></li>
-</ul>
-<h2 id="主要元件:">主要元件:</h2>
-<h4 id="V8">V8</h4>
-<p>美國Google開發的開源JavaScript引擎，用於Google Chrome中。<br>執行之前將JavaScript編譯成了機器碼(machine code)，而非傳統方式直譯(interpreting)位元組碼(byte code)，以此提升效能。<br>使用了如內聯緩存（inline caching）方法來提高效能。</p>
-<p></p><p>Wiki - <a href="http://en.wikipedia.org/wiki/V8_(JavaScript_engine)" target="_blank" rel="external">http://en.wikipedia.org/wiki/V8_(JavaScript_engine)</a></p><br><br><p></p>
-<h4 id="APIs">APIs</h4>
-<p><a href="http://nodejs.org/api/" target="_blank" rel="external">http://nodejs.org/api/</a><br><br></p>
-<h4 id="libuv">libuv</h4>
-<p>Github - <a href="https://github.com/libuv/libuv" target="_blank" rel="external">https://github.com/libuv/libuv</a><br><br></p>
-<h2 id="支援多個平台的非同步I/O_Libary，包含：">支援多個平台的非同步I/O Libary，包含：</h2>
-<ul>
-<li>Signal handling</li>
-<li>Thread pool</li>
-<li>ANSI escape code controlled TTY</li>
-<li>File system events</li>
-<li>Asynchronous file and file system operations</li>
-<li>Asynchronous DNS resolution</li>
-<li>Asynchronous TCP and UDP sockets</li>
-<li>event loop backed by epoll, kqueue, IOCP, event ports</li>
-<li>High resolution clock</li>
-<li>Threading and synchronization primitives</li>
-<li>IPC with socket sharing, using Unix domain sockets or named pipes (Windows)</li>
-<li>Child processes</li>
-</ul>
-<p><img src="http://image.slidesharecdn.com/nodejs-140507132306-phpapp02/95/nodejs-code-tracing-2-638.jpg?cb=1399487042" alt=""><br><br></p>
-<h2 id="安裝_Node-js">安裝 Node.js</h2>
-<p>到Node.js的官網 <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a> 選取要安裝的平台，下載安裝即可。<br> <img src="https://lh3.googleusercontent.com/W2WSoXyvU5uqvaK39o5ge2Crs7SRMx6zVYFvDG19SdoTUxJMkZMx305bVXibhy4eNhaTObS3KFw=w1267-h505" alt=""><br><strong>官方下載連結</strong> - <a href="http://nodejs.org/download/" target="_blank" rel="external">http://nodejs.org/download/</a><br><br><br>安裝完畢後，開啟終端機模式。<br>輸入 node -v 指令。<br>會在畫面顯示目前安裝的 Node.js 版本號，<br><img src="https://lh4.googleusercontent.com/zjEoRAFz9QNUzdKzrJONm-hWAC4EBulCM26hEpwlNB8WJRaVgYsRQBmTojK6EqXUomPPDdoCloE=w1267-h505" alt=""><br>看到此畫面表示已安裝成功。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/什麼是Node-js/" data-id="kkv94t7zs8aixntq" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2014/12/31/什麼是Node-js/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/">nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/學習筆記/">學習筆記</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-歸零" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2014/12/31/歸零/" class="article-date">
-  <time datetime="2014-12-31T02:00:24.000Z" itemprop="datePublished">Dec 31 2014</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/心情/">心情</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/12/31/歸零/">歸零</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="_"> </h4>
-<pre><code>倒空瓶子裏的水，才能裝滿美酒。
-</code></pre><p>最近時常有一種很焦慮的感覺，是一種對未來的不確定性的感覺。<br><br><br>我想，或許是因為心中想做的事情太多，卻又都沒有做。<br><br><br>以前的人說資訊就是力量。<br><br><br>目前處於一個資訊爆炸，又人人可以隨意取得資訊的世代。<br>隨著網際網路的出現，利用資訊不對等造成大量獲利的情況，將因網路的特性，逐漸被消除。<br>而平庸的跟頂尖的人，隨著辨別資訊消化資訊量的速度，差距逐漸被拉大。<br>處在這個世代的人們，該以何種策略增加在這個世界上生存的機會？<br><br><br>也許是多角化的經營。將自己能涉略的範圍加大，盡可能地涵蓋住每個角落。<br>也許是更快速的改變。隨著環境持續的變動，更快速的調整目標及方法。<br>也許是更專注瞭解自己。了解自己跟別人不同之處，加大與別人的差異化。<br>也許不是增加自己要做的，而是該減少自己想做的。<br><br><br>沈澱一下，找出最必要的，將精力專注在少數的項目上。<br>把不要的東西通通倒光，或許去蕪存菁之後，才是一個人活著的價值。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://miles990.github.io/2014/12/31/歸零/" data-id="ril2pm4fjssrfcg4" class="article-share-link">Share</a>
-      
-        <a href="http://miles990.github.io/2014/12/31/歸零/#disqus_thread" class="article-comment-link">Comments</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情/">心情</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </section>
         
@@ -794,7 +825,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker-學習筆記/">Docker 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git-學習筆記/">Git 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-Framework/">Node.js Framework</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/心情/">心情</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker-學習筆記/">Docker 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git-學習筆記/">Git 學習筆記</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MongoDB-學習筆記/">MongoDB 學習筆記</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-Framework/">Node.js Framework</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Node-js-學習筆記/">Node.js 學習筆記</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/心情/">心情</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/深入淺出Node-js讀書心得/">深入淺出Node.js讀書心得</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -803,7 +834,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB-The-Definitive-Guide/">MongoDB The Definitive Guide</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Replica-Set/">Replica Set</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sharded-Cluster/">Sharded Cluster</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/framework/">framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loopback/">loopback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodump/">mongodump</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongorestore/">mongorestore</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB-The-Definitive-Guide/">MongoDB The Definitive Guide</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Replica-Set/">Replica Set</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sharded-Cluster/">Sharded Cluster</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/framework/">framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/loopback/">loopback</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodump/">mongodump</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongorestore/">mongorestore</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/npm/">npm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/學習筆記/">學習筆記</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深入淺出Node-js讀書心得-一/">深入淺出Node.js讀書心得(一)</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/深入淺出Node-js讀書心得-二/">深入淺出Node.js讀書心得(二)</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/讀書心得/">讀書心得</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/讀書會/">讀書會</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -812,7 +843,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -824,23 +855,23 @@
       <ul>
         
           <li>
+            <a href="/2015/04/23/深入淺出Node-js讀書心得-二/">深入淺出Node.js讀書心得(二)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/23/深入淺出Node-js讀書心得-ㄧ/">深入淺出Node.js讀書心得(ㄧ)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/04/18/Node-js讀書會/">Node.js讀書會</a>
+          </li>
+        
+          <li>
             <a href="/2015/03/24/Mongodb-s-Replica-Set-Sharded-Cluster/">Mongodb&#39;s Replica Set &amp; Sharded Cluster</a>
           </li>
         
           <li>
             <a href="/2015/03/07/Docker使用指南/">Docker使用指南</a>
-          </li>
-        
-          <li>
-            <a href="/2015/02/26/MongoDB-The-Definitive-Guide讀書筆記/">MongoDB The Definitive Guide讀書筆記</a>
-          </li>
-        
-          <li>
-            <a href="/2015/02/24/備份-還原MongoDB資料庫/">備份&amp;還原MongoDB資料庫</a>
-          </li>
-        
-          <li>
-            <a href="/2015/02/16/部署Mongodb-Sharded-Cluster/">部署Mongodb Sharded Cluster</a>
           </li>
         
       </ul>
