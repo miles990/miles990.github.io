@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加密貨幣回測系統 | 專業交易策略開發平台</title>
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // 配置 Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f7ff',
+                            100: '#ebf0ff',
+                            200: '#d6e0ff',
+                            300: '#b3c6ff',
+                            400: '#809bff',
+                            500: '#4c6ef5',
+                            600: '#3b5bdb',
+                            700: '#364fc7',
+                            800: '#2f44bd',
+                            900: '#283aa3',
+                        },
+                        secondary: {
+                            50: '#f5fbf9',
+                            100: '#e6f7f4',
+                            200: '#bfeae2',
+                            300: '#84d3c2',
+                            400: '#48b39c',
+                            500: '#22c55e',
+                            600: '#0ca678',
+                            700: '#099268',
+                            800: '#087f5b',
+                            900: '#066649',
+                        },
+                        dark: {
+                            100: '#1e1e2e',
+                            200: '#181825',
+                            300: '#11111b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4c6ef5;
+            border-radius: 4px;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background: #3b5bdb;
+        }
+        
+        /* 平滑滾動 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 卡片懸停效果 */
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* 按鈕懸停效果 */
+        .btn-hover {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-hover:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 淡入動畫 */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-900 dark:bg-dark-100 dark:text-gray-100 transition-colors duration-200">
+    <!-- 主題切換腳本 -->
+    <script>
+        // 檢查系統主題偏好
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // 主題切換功能
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+        
+        // 從本地存儲中恢復主題設置
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- 導航欄 -->
+    <nav class="sticky top-0 z-50 bg-white dark:bg-dark-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-chart-line text-primary-600 dark:text-primary-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">加密貨幣回測系統</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#features" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">功能特點</a>
+                    <a href="#architecture" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">系統架構</a>
+                    <a href="#data-flow" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">數據流</a>
+                    <a href="#live-demo" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors">即時演示</a>
+                    <button onclick="toggleTheme()" class="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-100 focus:outline-none transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄區塊 -->
+    <header class="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-800 dark:to-primary-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 fade-in">
+                專業加密貨幣交易策略<br>開發與回測平台
+            </h1>
+            <p class="text-xl text-primary-100 max-w-3xl mx-auto mb-8 fade-in">
+                強大的回測檢查點系統，支持資料壓縮、完整性驗證和詳細分析，幫助您開發、測試和優化加密貨幣交易策略。
+            </p>
+            <div class="flex justify-center space-x-4 fade-in">
+                <a href="#features" class="btn-hover bg-white text-primary-700 hover:bg-primary-50 px-6 py-3 rounded-lg font-medium shadow-md">
+                    探索功能
+                </a>
+                <a href="#live-demo" class="btn-hover bg-primary-700 text-white hover:bg-primary-800 px-6 py-3 rounded-lg font-medium shadow-md">
+                    即時演示
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 功能特點 -->
+    <section id="features" class="py-16 bg-white dark:bg-dark-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">功能特點</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    我們的系統提供全方位的交易策略開發和回測功能，幫助您在加密貨幣市場中取得優勢。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 功能卡片 1 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-save text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">自動檢查點創建與管理</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        系統自動創建和管理回測檢查點，支持自定義保存間隔和詳細程度，確保您的回測數據安全可靠。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 2 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-file-archive text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">檔案壓縮和校驗</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        內置檔案壓縮功能，減少存儲空間佔用，同時提供數據校驗機制，確保檢查點數據的完整性。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 3 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-exchange-alt text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">詳細的倉位和交易記錄</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        記錄每筆交易的詳細信息，包括進場價格、倉位大小、止損位置等，幫助您全面分析交易策略。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 4 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-chart-bar text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">視覺化分析報告</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        生成直觀的視覺化分析報告，包括收益曲線、勝率統計、風險指標等，幫助您快速評估策略性能。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 5 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-tasks text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">批量處理工具</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        提供批量處理工具，支持同時分析多個檢查點，提高工作效率，快速比較不同策略的性能。
+                    </p>
+                </div>
+                
+                <!-- 功能卡片 6 -->
+                <div class="feature-card bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card hover:shadow-card-hover">
+                    <div class="text-primary-600 dark:text-primary-400 mb-4">
+                        <i class="fas fa-vial text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">完整的測試覆蓋</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        系統包含全面的單元測試和集成測試，確保每個組件的穩定性和可靠性，為您的交易策略提供堅實基礎。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 系統架構 -->
+    <section id="architecture" class="py-16 bg-gray-50 dark:bg-dark-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">系統架構</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    我們的系統由多個核心組件組成，每個組件都專注於特定功能，共同構成一個強大的交易策略開發平台。
+                </p>
+            </div>
+            
+            <!-- 核心組件 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- 基礎組件 -->
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-600 dark:text-primary-400">基礎組件</h3>
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-database text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">市場數據 (market_data.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">負責從交易所API獲取市場數據，包括交易對列表、市場成交量數據、市值信息、K線數據等。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-chart-line text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">技術指標 (indicators.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">提供各種技術指標的計算功能，包括RSI、MACD、KDJ、DMI、ATR、布林帶、OBV、移動平均線等。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-shield-alt text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">風險管理 (risk_management.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">負責風險控制和倉位管理，包括單筆交易風險控制、總風險控制、止損計算、倉位大小計算等。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 策略組件 -->
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-600 dark:text-primary-400">策略組件</h3>
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-code-branch text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">基礎選擇器 (base_selector.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">所有交易策略的基類，提供市場數據獲取和篩選、技術指標計算、多時間框架趨勢分析等功能。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-arrow-up text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">做多策略 (long_selector.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">繼承自基礎選擇器，專門用於生成做多信號，識別市場上漲趨勢並提供進場時機。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-arrow-down text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">做空策略 (short_selector.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">繼承自基礎選擇器，專門用於生成做空信號，識別市場下跌趨勢並提供進場時機。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 回測組件 -->
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-600 dark:text-primary-400">回測組件</h3>
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-history text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">回測引擎 (backtest.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">提供回測功能，用於評估交易策略的性能，包括歷史數據回測、性能指標計算、交易記錄生成等。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-bolt text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">快速回測 (quick_backtest.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">提供簡化的回測功能，用於快速評估策略，適合初步篩選和測試新策略。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 工具組件 -->
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-600 dark:text-primary-400">工具組件</h3>
+                    <ul class="space-y-4">
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-memory text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">緩存管理器 (cache_manager.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">提供數據緩存功能，減少API調用和重複計算，支持JSON和Pickle格式緩存，自定義過期時間。</p>
+                            </div>
+                        </li>
+                        <li class="flex">
+                            <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300">
+                                <i class="fas fa-microchip text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium">並行處理器 (parallel_processor.py)</h4>
+                                <p class="text-gray-600 dark:text-gray-400 mt-1">提供並行處理功能，提高系統性能，支持多線程處理、多進程處理、異步並行處理和批量處理。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 數據流 -->
+    <section id="data-flow" class="py-16 bg-white dark:bg-dark-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">數據流</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    了解系統各組件之間的數據流動和交互方式，幫助您更好地理解系統的工作原理。
+                </p>
+            </div>
+            
+            <!-- 數據流說明 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 數據獲取與處理 -->
+                <div class="bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card">
+                    <h3 class="text-xl font-semibold mb-4">數據獲取與處理</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        系統首先從交易所API獲取市場數據，包括K線數據、交易對信息等。這些數據經過緩存管理器處理後，被用於技術指標計算和多時間框架分析。
+                    </p>
+                    <div class="flex items-center text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        <span>市場數據 → 數據緩存 → 技術指標計算</span>
+                    </div>
+                </div>
+                
+                <!-- 信號生成與風險管理 -->
+                <div class="bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card">
+                    <h3 class="text-xl font-semibold mb-4">信號生成與風險管理</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        基於技術指標和多時間框架分析，系統生成交易信號。這些信號經過風險管理模塊處理，計算合適的倉位大小和止損位置，最終形成交易決策。
+                    </p>
+                    <div class="flex items-center text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        <span>技術指標 → 交易信號 → 風險管理</span>
+                    </div>
+                </div>
+                
+                <!-- 回測與優化 -->
+                <div class="bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card">
+                    <h3 class="text-xl font-semibold mb-4">回測與優化</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        交易策略通過回測引擎進行評估，生成性能報告和交易記錄。基於回測結果，可以調整策略參數，進行優化，形成一個閉環的策略開發流程。
+                    </p>
+                    <div class="flex items-center text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        <span>回測引擎 → 性能評估 → 策略調整</span>
+                    </div>
+                </div>
+                
+                <!-- 檢查點系統 -->
+                <div class="bg-gray-50 dark:bg-dark-200 rounded-xl p-6 shadow-card">
+                    <h3 class="text-xl font-semibold mb-4">檢查點系統</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        回測過程中，系統會定期創建檢查點，保存當前的回測狀態。這些檢查點可以用於恢復回測、分析特定時間點的交易決策和市場狀況。
+                    </p>
+                    <div class="flex items-center text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        <span>回測進行 → 檢查點創建 → 檢查點分析</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 即時演示 -->
+    <section id="live-demo" class="py-16 bg-gray-50 dark:bg-dark-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">即時演示</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    體驗我們系統的即時數據處理和分析能力，觀察加密貨幣市場的實時變化和交易信號生成。
+                </p>
+            </div>
+            
+            <!-- 回測結果 -->
+            <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                <h3 class="text-xl font-semibold mb-6">回測結果模擬</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 dark:bg-dark-200 rounded-lg">
+                        <h4 class="text-lg font-medium mb-2">總收益率</h4>
+                        <p class="text-3xl font-bold text-primary-600 dark:text-primary-400">+127.5%</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">過去12個月</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 dark:bg-dark-200 rounded-lg">
+                        <h4 class="text-lg font-medium mb-2">最大回撤</h4>
+                        <p class="text-3xl font-bold text-red-600 dark:text-red-400">-18.3%</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">2024年2月</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 dark:bg-dark-200 rounded-lg">
+                        <h4 class="text-lg font-medium mb-2">勝率</h4>
+                        <p class="text-3xl font-bold text-secondary-600 dark:text-secondary-400">68.5%</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">共235筆交易</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 交易信號 -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">交易信號</h3>
+                    <div class="space-y-6">
+                        <div class="p-4 border border-gray-200 dark:border-dark-100 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-lg font-medium">BTC/USDT</span>
+                                <span class="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded text-sm font-medium">做空信號</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">進場價格</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">$27,350.00</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">止損價格</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">$28,170.00</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">風險比率</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">3.0%</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">建議倉位</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">5.0%</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 border border-gray-200 dark:border-dark-100 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-lg font-medium">ETH/USDT</span>
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 rounded text-sm font-medium">做多信號</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">進場價格</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">$1,850.00</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">止損價格</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">$1,780.00</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">風險比率</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">3.8%</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 dark:text-gray-400">建議倉位</span>
+                                    <p class="text-gray-900 dark:text-white font-medium">4.0%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 技術指標 -->
+                <div class="bg-white dark:bg-dark-300 rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">技術指標</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 dark:text-gray-300">RSI (14)</span>
+                            <div class="flex items-center">
+                                <span id="rsi-value" class="text-lg font-medium">42.5</span>
+                                <div id="rsi-trend" class="ml-2 text-red-500">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-dark-100 rounded-full h-2.5">
+                            <div id="rsi-bar" class="bg-primary-600 h-2.5 rounded-full" style="width: 42.5%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-6">
+                            <span class="text-gray-700 dark:text-gray-300">MACD</span>
+                            <div class="flex items-center">
+                                <span id="macd-value" class="text-lg font-medium">-12.3</span>
+                                <div id="macd-trend" class="ml-2 text-red-500">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-dark-100 rounded-full h-2.5">
+                            <div id="macd-bar" class="bg-red-500 h-2.5 rounded-full" style="width: 65%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-6">
+                            <span class="text-gray-700 dark:text-gray-300">布林帶寬度</span>
+                            <div class="flex items-center">
+                                <span id="bb-value" class="text-lg font-medium">2.1%</span>
+                                <div id="bb-trend" class="ml-2 text-green-500">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-dark-100 rounded-full h-2.5">
+                            <div id="bb-bar" class="bg-secondary-500 h-2.5 rounded-full" style="width: 21%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁腳 -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-line text-primary-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">加密貨幣回測系統</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        專業的加密貨幣交易策略開發與回測平台，幫助您在加密貨幣市場中取得優勢。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速連結</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">功能特點</a></li>
+                        <li><a href="#architecture" class="text-gray-400 hover:text-white transition-colors">系統架構</a></li>
+                        <li><a href="#data-flow" class="text-gray-400 hover:text-white transition-colors">數據流</a></li>
+                        <li><a href="#live-demo" class="text-gray-400 hover:text-white transition-colors">即時演示</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">專案信息</h3>
+                    <p class="text-gray-400 mb-2">加密貨幣回測系統團隊</p>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="https://github.com/" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="https://twitter.com/" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="https://linkedin.com/" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        &copy; 2025 加密貨幣回測系統. 保留所有權利.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
