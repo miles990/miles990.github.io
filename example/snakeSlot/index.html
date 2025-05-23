@@ -519,6 +519,10 @@
                 <div>等級</div>
                 <div id="level">1</div>
             </div>
+            <div class="score-item">
+                <div>拉霸機</div>
+                <div id="slotQueue">0</div>
+            </div>
         </div>
         
         <canvas id="gameCanvas" width="600" height="600"></canvas>
@@ -529,6 +533,7 @@
     </div>
     
     <div class="slot-machine" id="slotMachine">
+        <div class="slot-queue-indicator" id="slotQueueIndicator" style="display: none;">0</div>
         <div class="jackpot-lights" id="jackpotLights"></div>
         <div class="slot-machine-title">🎰 拉霸機 🎰</div>
         <div class="slot-reels">
@@ -633,6 +638,7 @@
         let gameStarted = false;
         
         let showingSlotMachine = false;
+        let slotMachineQueue = 0;  // 拉霸機排隊次數
         
         // 拉霸機符號
         const slotSymbols = ['🍎', '🍊', '🍇', '⭐', '💎', '🎯', '⚡', '🔥'];
@@ -820,7 +826,11 @@
                 }
                 
                 if (food.type === 'special') {
-                    // 觸發拉霸機 - 但不暫停遊戲
+                    // 增加拉霸機次數
+                    slotMachineQueue++;
+                    document.getElementById('slotQueue').textContent = slotMachineQueue;
+                    
+                    // 如果拉霸機沒在運行，立即開始
                     if (!showingSlotMachine) {
                         showingSlotMachine = true;
                         showSlotMachine();
@@ -852,6 +862,19 @@
         function showSlotMachine() {
             const slotMachine = document.getElementById('slotMachine');
             slotMachine.style.display = 'block';
+            
+            // 減少排隊次數
+            slotMachineQueue--;
+            document.getElementById('slotQueue').textContent = slotMachineQueue;
+            
+            // 更新拉霸機上的次數指示器
+            const queueIndicator = document.getElementById('slotQueueIndicator');
+            if (slotMachineQueue > 0) {
+                queueIndicator.style.display = 'flex';
+                queueIndicator.textContent = slotMachineQueue;
+            } else {
+                queueIndicator.style.display = 'none';
+            }
             
             const allSymbols = ['🍎', '🍊', '🍇', '⭐', '💎', '🎯', '⚡', '🔥'];
             
@@ -917,16 +940,25 @@
                 }, stopTimes[i]);
             }
             
-            // 隱藏拉霸機
+            // 檢查是否還有排隊的次數
             setTimeout(() => {
-                slotMachine.style.display = 'none';
-                showingSlotMachine = false;
                 document.getElementById('jackpotLights').classList.remove('active');
                 
                 // 清理類別
                 for (let i = 1; i <= 3; i++) {
                     const reel = document.getElementById(`reel${i}`);
                     reel.classList.remove('spinning', 'stopping');
+                }
+                
+                // 如果還有排隊次數，繼續轉動
+                if (slotMachineQueue > 0) {
+                    setTimeout(() => {
+                        showSlotMachine();
+                    }, 500);
+                } else {
+                    // 沒有排隊次數才隱藏
+                    slotMachine.style.display = 'none';
+                    showingSlotMachine = false;
                 }
             }, 4500);
         }
@@ -1117,9 +1149,11 @@
                 clearInterval(timer);
             });
             powerUpTimers = {};
+            slotMachineQueue = 0;  // 重置拉霸機次數
             
             document.getElementById('score').textContent = score;
             document.getElementById('level').textContent = level;
+            document.getElementById('slotQueue').textContent = slotMachineQueue;
             document.getElementById('powerUpIndicator').style.display = 'none';
             document.getElementById('gameOverScreen').style.display = 'none';
             
