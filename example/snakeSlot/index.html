@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貪食蛇拉霸機</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .game-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .score-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        #gameCanvas {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slot-machine {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        .slot-machine::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.5) 50%,
+                transparent 70%
+            );
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%) rotate(10deg);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        .slot-machine-title {
+            color: white;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .slot-reels {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .reel {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .reel-spinning {
+            animation: spin 0.2s linear infinite;
+            background: linear-gradient(145deg, #ffeb3b, #ffc107);
+        }
+        
+        .reel-spinning::before {
+            content: '🎰';
+            position: absolute;
+            animation: spinSymbol 0.3s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { 
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+            50% {
+                transform: translateY(-30px) scale(0.95);
+                filter: blur(2px);
+            }
+            100% { 
+                transform: translateY(-60px) scale(1);
+                filter: blur(0);
+            }
+        }
+        
+        @keyframes spinSymbol {
+            0% { transform: translateY(60px); }
+            100% { transform: translateY(-60px); }
+        }
+        
+        .slot-result {
+            text-align: center;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slot-result.win {
+            animation: celebrate 0.5s ease-out;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(0.5) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        .jackpot-lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            border-radius: 20px;
+            opacity: 0;
+        }
+        
+        .jackpot-lights.active {
+            animation: flash 0.5s ease-out 3;
+            opacity: 1;
+        }
+        
+        @keyframes flash {
+            0%, 100% { 
+                box-shadow: 
+                    inset 0 0 50px rgba(255, 215, 0, 0.8),
+                    0 0 50px rgba(255, 215, 0, 0.8);
+            }
+            50% { 
+                box-shadow: 
+                    inset 0 0 100px rgba(255, 255, 255, 0.9),
+                    0 0 100px rgba(255, 255, 255, 0.9);
+            }
+        }
+        
+        .slot-reels {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .reel {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .reel-spinning {
+            animation: spin 0.3s linear infinite;
+        }
+        
+        @keyframes bounce {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.1) translateY(-5px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+        
+        .slot-result {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .power-up-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            display: none;
+        }
+        
+        .reel-spinning {
+            animation: spin 0.3s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-60px); }
+        }
+        
+        .slot-result {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .power-up-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            display: none;
+        }
+        
+        .game-over-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-over-screen h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .restart-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .start-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            z-index: 2000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .start-screen h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-description {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .game-instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .game-instructions h3 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .instruction-item .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .power-list {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .power-list h3 {
+            margin-bottom: 15px;
+        }
+        
+        .power-item {
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+        
+        .power-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .start-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .start-btn:active {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .slot-machine {
+                top: 10px;
+                right: 10px;
+                padding: 15px;
+            }
+            
+            .reel {
+                width: 50px;
+                height: 50px;
+                font-size: 2em;
+            }
+            
+            .slot-result {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎰 貪食蛇拉霸機 🐍</h1>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-item">
+                <div>分數</div>
+                <div id="score">0</div>
+            </div>
+            <div class="score-item">
+                <div>最高分</div>
+                <div id="highScore">0</div>
+            </div>
+            <div class="score-item">
+                <div>等級</div>
+                <div id="level">1</div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+        
+        <div class="controls-info">
+            <p>使用方向鍵或 WASD 控制移動</p>
+        </div>
+    </div>
+    
+    <div class="slot-machine" id="slotMachine">
+        <div class="jackpot-lights" id="jackpotLights"></div>
+        <div class="slot-machine-title">🎰 拉霸機 🎰</div>
+        <div class="slot-reels">
+            <div class="reel" id="reel1">🍎</div>
+            <div class="reel" id="reel2">🍎</div>
+            <div class="reel" id="reel3">🍎</div>
+        </div>
+        <div class="slot-result" id="slotResult"></div>
+    </div>
+    
+    <div class="power-up-indicator" id="powerUpIndicator">
+        <div id="powerUpText"></div>
+        <div id="powerUpTimer"></div>
+    </div>
+    
+    <div class="game-over-screen" id="gameOverScreen">
+        <h2>遊戲結束！</h2>
+        <p>最終分數: <span id="finalScore">0</span></p>
+        <p>最高分: <span id="finalHighScore">0</span></p>
+        <button class="restart-btn" onclick="restartGame()">重新開始</button>
+    </div>
+    
+    <div class="start-screen" id="startScreen">
+        <h1>🎰 貪食蛇拉霸機 🐍</h1>
+        <p class="game-description">結合經典貪食蛇與拉霸機的創新遊戲！</p>
+        
+        <div class="game-instructions">
+            <h3>遊戲說明</h3>
+            <div class="instruction-item">
+                <span class="icon">🎮</span>
+                <span>使用方向鍵或 WASD 控制移動</span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">🍎</span>
+                <span>吃紅色食物獲得分數</span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">⭐</span>
+                <span>吃金色星星觸發拉霸機</span>
+            </div>
+            <div class="instruction-item">
+                <span class="icon">🎰</span>
+                <span>拉霸機可獲得特殊能力</span>
+            </div>
+        </div>
+        
+        <div class="power-list">
+            <h3>特殊能力</h3>
+            <div class="power-item">💎 超級大獎 - 分數 x3</div>
+            <div class="power-item">⭐ 無敵模式 - 穿越自己</div>
+            <div class="power-item">⚡ 超級速度 - 移動加快</div>
+            <div class="power-item">🔥 雙倍分數 - 分數加倍</div>
+            <div class="power-item">🎯 磁鐵模式 - 吸引食物</div>
+        </div>
+        
+        <button class="start-btn" onclick="startGame()">開始遊戲</button>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+        
+        let snake = [
+            {x: 10, y: 10}
+        ];
+        let dx = 0;
+        let dy = 0;
+        let food = {};
+        let score = 0;
+        let highScore = 0;
+        
+        // 安全地讀取 localStorage
+        try {
+            highScore = localStorage.getItem('snakeHighScore') || 0;
+        } catch (e) {
+            console.log('無法存取 localStorage，使用預設值');
+            highScore = 0;
+        }
+        let level = 1;
+        let gameSpeed = 100;
+        let gameRunning = false;
+        let gameStarted = false;
+        
+        let showingSlotMachine = false;
+        
+        // 拉霸機符號
+        const slotSymbols = ['🍎', '🍊', '🍇', '⭐', '💎', '🎯', '⚡', '🔥'];
+        
+        // 能力系統
+        let activePowerUps = {
+            speed: false,
+            invincible: false,
+            double: false,
+            magnet: false
+        };
+        
+        let powerUpTimers = {};
+        
+        // 初始化
+        document.getElementById('highScore').textContent = highScore;
+        
+        // 生成食物
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount),
+                type: Math.random() < 0.3 ? 'special' : 'normal'  // 30%機率出現特殊食物
+            };
+            
+            // 確保食物不在蛇身上
+            for (let segment of snake) {
+                if (segment.x === food.x && segment.y === food.y) {
+                    generateFood();
+                    return;
+                }
+            }
+            
+            console.log('生成食物:', food.type, '在位置', food.x, food.y);
+        }
+        
+        // 繪製遊戲
+        function draw() {
+            // 清空畫布
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (!gameStarted) {
+                // 顯示待機畫面
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '30px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('按下「開始遊戲」開始', canvas.width/2, canvas.height/2);
+                return;
+            }
+            
+            // 繪製網格
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < tileCount; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * gridSize, 0);
+                ctx.lineTo(i * gridSize, canvas.height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, i * gridSize);
+                ctx.lineTo(canvas.width, i * gridSize);
+                ctx.stroke();
+            }
+            
+            // 繪製蛇
+            snake.forEach((segment, index) => {
+                if (index === 0) {
+                    // 蛇頭
+                    const gradient = ctx.createRadialGradient(
+                        segment.x * gridSize + gridSize/2,
+                        segment.y * gridSize + gridSize/2,
+                        0,
+                        segment.x * gridSize + gridSize/2,
+                        segment.y * gridSize + gridSize/2,
+                        gridSize/2
+                    );
+                    gradient.addColorStop(0, activePowerUps.invincible ? '#FFD700' : '#4CAF50');
+                    gradient.addColorStop(1, activePowerUps.invincible ? '#FFA500' : '#2E7D32');
+                    ctx.fillStyle = gradient;
+                } else {
+                    // 蛇身
+                    ctx.fillStyle = activePowerUps.invincible ? 
+                        `rgba(255, 215, 0, ${1 - index * 0.02})` : 
+                        `rgba(76, 175, 80, ${1 - index * 0.02})`;
+                }
+                
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = activePowerUps.invincible ? '#FFD700' : '#4CAF50';
+                ctx.fillRect(
+                    segment.x * gridSize + 2,
+                    segment.y * gridSize + 2,
+                    gridSize - 4,
+                    gridSize - 4
+                );
+                ctx.shadowBlur = 0;
+            });
+            
+            // 繪製食物
+            ctx.shadowBlur = 0; // 先重置陰影
+            if (food.type === 'special') {
+                // 特殊食物 - 會觸發拉霸機
+                const time = Date.now() / 1000;
+                const pulse = Math.sin(time * 5) * 0.1 + 0.9;
+                
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#FFD700';
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(
+                    food.x * gridSize + gridSize/2,
+                    food.y * gridSize + gridSize/2,
+                    gridSize/2 * pulse,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // 星星圖案
+                ctx.fillStyle = '#FFF';
+                ctx.font = `${gridSize * 0.6}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('⭐', food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2);
+            } else {
+                // 普通食物
+                ctx.fillStyle = '#FF5252';
+                ctx.beginPath();
+                ctx.arc(
+                    food.x * gridSize + gridSize/2,
+                    food.y * gridSize + gridSize/2,
+                    gridSize/3,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+        
+        // 更新遊戲狀態
+        function update() {
+            if (!gameRunning || !gameStarted) return;
+            
+            // 如果蛇沒有在移動，不更新
+            if (dx === 0 && dy === 0) return;
+            
+            // 移動蛇頭
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            
+            // 邊界處理 - 穿越
+            if (head.x < 0) head.x = tileCount - 1;
+            if (head.x >= tileCount) head.x = 0;
+            if (head.y < 0) head.y = tileCount - 1;
+            if (head.y >= tileCount) head.y = 0;
+            
+            // 檢查自身碰撞（跳過第一個身體段，因為那是頭部剛經過的位置）
+            if (!activePowerUps.invincible) {
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        gameOver();
+                        return;
+                    }
+                }
+            }
+            
+            snake.unshift(head);
+            
+            // 檢查是否吃到食物
+            if (head.x === food.x && head.y === food.y) {
+                score += activePowerUps.double ? 20 : 10;
+                document.getElementById('score').textContent = score;
+                
+                // 更新等級
+                level = Math.floor(score / 100) + 1;
+                document.getElementById('level').textContent = level;
+                const newSpeed = Math.max(50, 100 - level * 5);
+                if (newSpeed !== gameSpeed && !activePowerUps.speed) {
+                    gameSpeed = newSpeed;
+                    updateGameSpeed();
+                }
+                
+                if (food.type === 'special') {
+                    // 觸發拉霸機 - 但不暫停遊戲
+                    if (!showingSlotMachine) {
+                        showingSlotMachine = true;
+                        showSlotMachine();
+                    }
+                }
+                
+                generateFood();
+            } else {
+                snake.pop();
+            }
+            
+            // 磁鐵效果
+            if (activePowerUps.magnet && (dx !== 0 || dy !== 0)) {
+                const distance = Math.abs(head.x - food.x) + Math.abs(head.y - food.y);
+                if (distance <= 3 && distance > 0) {
+                    // 自動導向食物
+                    if (Math.abs(head.x - food.x) > Math.abs(head.y - food.y)) {
+                        dx = food.x > head.x ? 1 : -1;
+                        dy = 0;
+                    } else {
+                        dx = 0;
+                        dy = food.y > head.y ? 1 : -1;
+                    }
+                }
+            }
+        }
+        
+        // 顯示拉霸機
+        function showSlotMachine() {
+            const slotMachine = document.getElementById('slotMachine');
+            slotMachine.style.display = 'block';
+            
+            // 播放音效（模擬）
+            const symbols = ['🍎', '🍊', '🍇', '⭐', '💎', '🎯', '⚡', '🔥'];
+            
+            // 開始轉動
+            const reels = ['reel1', 'reel2', 'reel3'];
+            let spinIntervals = [];
+            
+            reels.forEach((reel, index) => {
+                const reelElement = document.getElementById(reel);
+                reelElement.classList.add('reel-spinning');
+                
+                // 快速切換符號產生轉動效果
+                let symbolIndex = 0;
+                spinIntervals[index] = setInterval(() => {
+                    reelElement.textContent = symbols[symbolIndex % symbols.length];
+                    symbolIndex++;
+                }, 100);
+            });
+            
+            // 逐個停止轉動
+            const results = [];
+            reels.forEach((reel, index) => {
+                setTimeout(() => {
+                    clearInterval(spinIntervals[index]);
+                    const symbol = slotSymbols[Math.floor(Math.random() * slotSymbols.length)];
+                    results.push(symbol);
+                    const reelElement = document.getElementById(reel);
+                    reelElement.classList.remove('reel-spinning');
+                    reelElement.textContent = symbol;
+                    
+                    // 停止動畫效果
+                    reelElement.style.animation = 'bounce 0.3s ease-out';
+                    setTimeout(() => {
+                        reelElement.style.animation = '';
+                    }, 300);
+                    
+                    // 當所有轉輪都停止時，檢查結果
+                    if (index === 2) {
+                        setTimeout(() => {
+                            checkSlotResult(results);
+                        }, 300);
+                    }
+                }, 1000 + index * 500); // 逐個停止
+            });
+            
+            // 隱藏拉霸機
+            setTimeout(() => {
+                slotMachine.style.display = 'none';
+                showingSlotMachine = false;
+                document.getElementById('jackpotLights').classList.remove('active');
+            }, 4000);
+        }
+        
+        // 檢查拉霸機結果
+        function checkSlotResult(results) {
+            const resultElement = document.getElementById('slotResult');
+            let message = '';
+            let powerUp = '';
+            let isJackpot = false;
+            
+            // 三個相同
+            if (results[0] === results[1] && results[1] === results[2]) {
+                isJackpot = true;
+                document.getElementById('jackpotLights').classList.add('active');
+                
+                switch(results[0]) {
+                    case '💎':
+                        message = '💎 超級大獎！分數 x3！💎';
+                        score *= 3;
+                        break;
+                    case '⭐':
+                        message = '⭐ 無敵模式！10秒！⭐';
+                        powerUp = 'invincible';
+                        break;
+                    case '⚡':
+                        message = '⚡ 超級速度！15秒！⚡';
+                        powerUp = 'speed';
+                        break;
+                    case '🔥':
+                        message = '🔥 雙倍分數！20秒！🔥';
+                        powerUp = 'double';
+                        break;
+                    default:
+                        message = '🎉 獎勵100分！🎉';
+                        score += 100;
+                }
+            }
+            // 兩個相同
+            else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+                message = '✨ 獎勵50分！✨';
+                score += 50;
+            }
+            // 特殊組合
+            else if (results.includes('🎯') && results.includes('⚡')) {
+                message = '🧲 磁鐵模式！吸引食物！🧲';
+                powerUp = 'magnet';
+                isJackpot = true;
+            }
+            else {
+                message = '再接再厲！+10分';
+                score += 10;
+            }
+            
+            resultElement.textContent = message;
+            if (isJackpot) {
+                resultElement.classList.add('win');
+                setTimeout(() => {
+                    resultElement.classList.remove('win');
+                }, 500);
+            }
+            
+            document.getElementById('score').textContent = score;
+            
+            // 啟動能力
+            if (powerUp) {
+                activatePowerUp(powerUp);
+            }
+        }
+        
+        // 啟動能力
+        function activatePowerUp(type) {
+            activePowerUps[type] = true;
+            const indicator = document.getElementById('powerUpIndicator');
+            const text = document.getElementById('powerUpText');
+            const timer = document.getElementById('powerUpTimer');
+            
+            indicator.style.display = 'block';
+            
+            let duration = 10000; // 預設10秒
+            let displayName = '';
+            
+            switch(type) {
+                case 'invincible':
+                    displayName = '無敵模式';
+                    duration = 10000;
+                    break;
+                case 'speed':
+                    displayName = '超級速度';
+                    duration = 15000;
+                    gameSpeed = 50;
+                    updateGameSpeed(); // 更新遊戲速度
+                    break;
+                case 'double':
+                    displayName = '雙倍分數';
+                    duration = 20000;
+                    break;
+                case 'magnet':
+                    displayName = '磁鐵模式';
+                    duration = 15000;
+                    break;
+            }
+            
+            text.textContent = displayName;
+            
+            // 清除舊計時器
+            if (powerUpTimers[type]) {
+                clearInterval(powerUpTimers[type]);
+            }
+            
+            // 倒計時
+            let remaining = duration / 1000;
+            timer.textContent = `${remaining}秒`;
+            
+            const interval = setInterval(() => {
+                remaining--;
+                timer.textContent = `${remaining}秒`;
+                
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    activePowerUps[type] = false;
+                    
+                    // 檢查是否還有其他能力
+                    if (!Object.values(activePowerUps).some(v => v)) {
+                        indicator.style.display = 'none';
+                    }
+                    
+                    // 恢復速度
+                    if (type === 'speed') {
+                        gameSpeed = Math.max(50, 100 - level * 5);
+                        updateGameSpeed(); // 更新遊戲速度
+                    }
+                }
+            }, 1000);
+            
+            powerUpTimers[type] = interval;
+        }
+        
+        // 遊戲結束
+        function gameOver() {
+            if (!gameRunning) return; // 防止重複觸發
+            
+            gameRunning = false;
+            if (gameInterval) clearInterval(gameInterval);
+            
+            // 更新最高分
+            if (score > highScore) {
+                highScore = score;
+                try {
+                    localStorage.setItem('snakeHighScore', highScore);
+                } catch (e) {
+                    console.log('無法儲存最高分到 localStorage');
+                }
+                document.getElementById('highScore').textContent = highScore;
+            }
+            
+            // 顯示遊戲結束畫面
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalHighScore').textContent = highScore;
+            document.getElementById('gameOverScreen').style.display = 'block';
+        }
+        
+        // 開始遊戲
+        function startGame() {
+            gameStarted = true;
+            gameRunning = true;
+            document.getElementById('startScreen').style.display = 'none';
+            generateFood();
+            startGameLoop();
+        }
+        
+        // 重新開始遊戲
+        function restartGame() {
+            snake = [{x: 10, y: 10}];
+            dx = 0;
+            dy = 0;
+            score = 0;
+            level = 1;
+            gameSpeed = 100;
+            gameRunning = true;
+            gameStarted = true;
+            
+            // 重置能力
+            Object.keys(activePowerUps).forEach(key => {
+                activePowerUps[key] = false;
+            });
+            Object.values(powerUpTimers).forEach(timer => {
+                clearInterval(timer);
+            });
+            powerUpTimers = {};
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('powerUpIndicator').style.display = 'none';
+            document.getElementById('gameOverScreen').style.display = 'none';
+            
+            generateFood();
+            startGameLoop(); // 重新開始遊戲循環
+        }
+        
+        // 鍵盤控制
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning || !gameStarted) {
+                console.log('控制被阻擋:', {gameRunning, gameStarted});
+                return;
+            }
+            
+            // 防止方向鍵滾動頁面
+            if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+            }
+            
+            const oldDx = dx;
+            const oldDy = dy;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    if (dy !== 1) { // 不能往反方向
+                        dx = 0;
+                        dy = -1;
+                    }
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    if (dy !== -1) { // 不能往反方向
+                        dx = 0;
+                        dy = 1;
+                    }
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    if (dx !== 1) { // 不能往反方向
+                        dx = -1;
+                        dy = 0;
+                    }
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    if (dx !== -1) { // 不能往反方向
+                        dx = 1;
+                        dy = 0;
+                    }
+                    break;
+            }
+            
+            if (dx !== oldDx || dy !== oldDy) {
+                console.log('方向改變:', {dx, dy});
+            }
+        });
+        
+        // 遊戲循環
+        function gameLoop() {
+            update();
+            draw();
+        }
+        
+        // 使用 setInterval 來控制遊戲速度
+        let gameInterval;
+        function startGameLoop() {
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, gameSpeed);
+        }
+        
+        // 更新遊戲速度
+        function updateGameSpeed() {
+            if (gameInterval) clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, gameSpeed);
+        }
+        
+        // 開始遊戲
+        draw(); // 初始繪製
+        // 遊戲會在按下開始按鈕後啟動
+    </script>
+</body>
+</html>
